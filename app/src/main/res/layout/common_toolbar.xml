@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.AppBarLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/appbar"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:fadingEdge="none"
+	android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+	app:elevation="0dp">
+
+	<android.support.v7.widget.Toolbar
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/toolbar_height"
+		android:layout_below="@+id/statusBarBackground"
+		android:background="@color/colorPrimary"
+		android:fadingEdge="none"
+		android:minHeight="@dimen/toolbar_height"
+		android:title=""
+		app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar"/>
+
+</android.support.design.widget.AppBarLayout>
