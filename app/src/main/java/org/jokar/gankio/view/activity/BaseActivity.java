@@ -8,7 +8,6 @@ import android.view.View;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
-import butterknife.ButterKnife;
 
 /**
  * Created by JokAr on 16/9/9.
@@ -16,11 +15,6 @@ import butterknife.ButterKnife;
 public abstract class BaseActivity extends RxAppCompatActivity {
 
 
-    @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
-
-    }
 
     public void initToolbar(Toolbar toolbar, String title) {
         toolbar.setTitle(title);

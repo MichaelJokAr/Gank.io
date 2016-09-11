@@ -9,6 +9,9 @@
 		<item name="android:windowAnimationStyle">@style/FeelyouWindowAnimTheme</item>
 	</style>
 
+	<style name="SplahsTheme" parent="AppTheme">
+		<item name="android:windowIsTranslucent">true</item>
+	</style>
 
 	<!--activity从左向右进入动画-->
 	<style name="FeelyouWindowAnimTheme" parent="@android:style/Animation.Activity">

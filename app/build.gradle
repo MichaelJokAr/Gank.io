@@ -42,9 +42,7 @@ android {
             jniDebuggable true
         }
     }
-    dexOptions {
-        incremental true
-    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
@@ -54,8 +52,9 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //test
-    testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'junit:junit:4.12'
+    testCompile 'org.robolectric:robolectric:3.1.2'
+
     //support
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile 'com.android.support:design:24.2.0'
@@ -82,9 +81,8 @@ dependencies {
     compile 'com.google.code.gson:gson:latest.release'
     //PhotoView
     compile 'com.commit451:PhotoView:latest.release'
-    //dragger2
+    //dagger2
     apt 'com.google.dagger:dagger-compiler:latest.release'
     compile 'com.google.dagger:dagger:latest.release'
-
 
 }

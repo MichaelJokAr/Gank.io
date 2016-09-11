@@ -9,4 +9,7 @@
 		<item name="android:windowAnimationStyle">@style/FeelyouWindowAnimTheme</item>
 	</style>
 
+	<style name="SplahsTheme" parent="AppTheme">
+		<item name="android:windowIsTranslucent">true</item>
+	</style>
 </resources>

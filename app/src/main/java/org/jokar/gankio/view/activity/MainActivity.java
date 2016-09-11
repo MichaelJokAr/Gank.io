@@ -1,4 +1,4 @@
-package org.jokar.gankio;
+package org.jokar.gankio.view.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
+import org.jokar.gankio.R;
 import org.jokar.gankio.view.activity.BaseActivity;
 
 import butterknife.BindView;
