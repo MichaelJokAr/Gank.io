@@ -19,11 +19,15 @@ import com.bumptech.glide.request.target.Target;
 import com.trello.rxlifecycle.android.ActivityEvent;
 
 import org.jokar.gankio.R;
+import org.jokar.gankio.di.component.config.DaggerCPComponent;
+import org.jokar.gankio.di.component.preseneter.DaggerSplashViewPresenetrComponent;
+import org.jokar.gankio.di.module.models.SplashModelModule;
+import org.jokar.gankio.di.module.view.SplashViewModule;
+import org.jokar.gankio.di.component.config.CPComponent;
+import org.jokar.gankio.di.module.config.CPModule;
+import org.jokar.gankio.model.config.ConfigPreferences;
 import org.jokar.gankio.model.entities.SplashImage;
-import org.jokar.gankio.presenter.component.DaggerSplashViewComponent;
 import org.jokar.gankio.presenter.impl.SplashViewPresenterImpl;
-import org.jokar.gankio.presenter.module.SplashModelModule;
-import org.jokar.gankio.presenter.module.SplashViewModule;
 import org.jokar.gankio.utils.JLog;
 import org.jokar.gankio.view.ui.SplashView;
 
@@ -42,8 +46,12 @@ public class SplashViewActivity extends BaseActivity implements SplashView {
     ImageView image;
     @BindView(R.id.text)
     TextView text;
+
     @Inject
-    public SplashViewPresenterImpl mSplashViewPresenter;
+    SplashViewPresenterImpl mSplashViewPresenter;
+
+    @Inject
+    ConfigPreferences mConfigPreferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,13 +64,18 @@ public class SplashViewActivity extends BaseActivity implements SplashView {
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
         //初始化SplashViewPresenter
-        DaggerSplashViewComponent.builder()
+        CPComponent cpComponent = DaggerCPComponent.builder()
+                .cPModule(new CPModule(this))
+                .build();
+
+        DaggerSplashViewPresenetrComponent.builder()
+                .cPComponent(cpComponent)
                 .splashModelModule(new SplashModelModule())
                 .splashViewModule(new SplashViewModule(this))
                 .build()
                 .inject(this);
 
-        mSplashViewPresenter.getImage(this,bindUntilEvent(ActivityEvent.STOP));
+        mSplashViewPresenter.getImage(mConfigPreferences,bindUntilEvent(ActivityEvent.STOP));
 
     }
 

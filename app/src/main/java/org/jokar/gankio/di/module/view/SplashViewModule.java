@@ -1,4 +1,4 @@
-package org.jokar.gankio.presenter.module;
+package org.jokar.gankio.di.module.view;
 
 import org.jokar.gankio.view.ui.SplashView;
 

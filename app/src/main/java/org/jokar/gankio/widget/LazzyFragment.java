@@ -7,10 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.trello.rxlifecycle.components.support.RxFragment;
+
 /**
  * Created by JokAr on 16/9/9.
  */
-public abstract class LazzyFragment extends Fragment {
+public abstract class LazzyFragment extends RxFragment {
     //控件是否已经初始化
     private boolean isCreateView = false;
     //是否已经加载过数据

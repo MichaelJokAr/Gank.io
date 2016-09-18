@@ -1,4 +1,4 @@
-package org.jokar.gankio.presenter.module;
+package org.jokar.gankio.di.module.models;
 
 import org.jokar.gankio.model.event.SplashViewModel;
 import org.jokar.gankio.model.impl.SplashViewModelImpl;

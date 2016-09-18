@@ -34,8 +34,8 @@ public class SplashViewActivityTest extends TestCase {
         SplashViewActivity splashViewActivity = Robolectric.setupActivity(SplashViewActivity.class);
         assertNotNull(splashViewActivity);
 
-        splashViewActivity.mSplashViewPresenter.getImage(splashViewActivity.getApplicationContext(),
-                splashViewActivity.bindUntilEvent(ActivityEvent.STOP));
+//        splashViewActivity.mSplashViewPresenter.getImage(splashViewActivity.getApplicationContext(),
+//                splashViewActivity.bindUntilEvent(ActivityEvent.STOP));
 
     }
 }

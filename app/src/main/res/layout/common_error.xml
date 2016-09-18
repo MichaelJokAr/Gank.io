@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.jokar.gankio.widget.ErrorView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/errorView"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="#eeeeee"
+	android:visibility="gone">
+
+</org.jokar.gankio.widget.ErrorView>

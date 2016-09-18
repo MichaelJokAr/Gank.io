@@ -3,4 +3,9 @@
 	<color name="colorPrimary">#5f7c89</color>
 	<color name="colorPrimaryDark">#5f7c89</color>
 	<color name="colorAccent">@android:color/white</color>
+	<color name="error_view_text">#656565</color>
+	<color name="error_view_text_dark">#CC000000</color>
+	<color name="error_view_text_light">#858585</color>
+	<color name="error_view_retry_button_background">#30000000</color>
+	<color name="error_view_retry_button_background_stroke">#50000000</color>
 </resources>

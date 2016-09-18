@@ -8,12 +8,13 @@ import android.view.View;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
+import org.jokar.gankio.presenter.BasePresenter;
+
 
 /**
  * Created by JokAr on 16/9/9.
  */
 public abstract class BaseActivity extends RxAppCompatActivity {
-
 
 
     public void initToolbar(Toolbar toolbar, String title) {
@@ -29,6 +30,5 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             }
         });
     }
-
 
 }

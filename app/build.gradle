@@ -47,18 +47,20 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+    dexOptions {
+        incremental true
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     //test
     testCompile 'junit:junit:4.12'
     testCompile 'org.robolectric:robolectric:3.1.2'
-
     //support
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile 'com.android.support:design:24.2.0'
-    compile 'com.android.support:cardview-v7:24.2.0'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:cardview-v7:24.2.1'
     //view注释
     compile 'com.jakewharton:butterknife:latest.release'
     apt 'com.jakewharton:butterknife-compiler:latest.release'
@@ -68,9 +70,9 @@ dependencies {
     //rxJava
     compile 'io.reactivex:rxjava:latest.release'
     compile 'io.reactivex:rxandroid:latest.release'
-    compile 'com.trello:rxlifecycle:0.7.0'
-    compile 'com.trello:rxlifecycle-components:0.7.0'
-    compile 'com.trello:rxlifecycle-android:0.7.0'
+    compile 'com.trello:rxlifecycle:latest.release'
+    compile 'com.trello:rxlifecycle-components:latest.release'
+    compile 'com.trello:rxlifecycle-android:latest.release'
     //network - squareup
     compile 'com.squareup.retrofit2:retrofit:latest.release'
     compile 'com.squareup.retrofit2:converter-gson:latest.release'
@@ -84,5 +86,5 @@ dependencies {
     //dagger2
     apt 'com.google.dagger:dagger-compiler:latest.release'
     compile 'com.google.dagger:dagger:latest.release'
-
+    provided 'org.glassfish:javax.annotation:10.0-b28'
 }

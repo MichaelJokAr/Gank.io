@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.inject.Inject;
+
 /**
  * singlton
  * Created by JokAr on 16/9/11.
@@ -14,6 +16,7 @@ public class ConfigPreferences {
     private String name = "config";
     private static final AtomicReference<ConfigPreferences> instance = new AtomicReference<>();
 
+    @Inject
     public ConfigPreferences(Context context) {
        mSharedPreferences = context.getSharedPreferences(name,Context.MODE_PRIVATE);
     }
