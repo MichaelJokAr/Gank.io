@@ -9,7 +9,17 @@ import java.util.List;
  */
 public interface FragmentView {
 
-    void getDataSuccess(List<SearchEntities> searchEntities);
+    void showLoadProgress();
 
-    void getDataError(Throwable e,List<SearchEntities> searchEntities);
+    void completeLoadProgress();
+
+    void loadStartLocalData(List<SearchEntities> searchEntities);
+
+    void loadStartNoLocalData();
+
+    void loadNoLoacalData(Throwable e);
+
+    void loadNoData(Throwable e);
+
+    void loadData(List<SearchEntities> searchEntities);
 }

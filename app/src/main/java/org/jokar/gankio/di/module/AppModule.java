@@ -1,6 +1,9 @@
-package org.jokar.gankio.app;
+package org.jokar.gankio.di.module;
 
 import android.app.Application;
+import android.content.Context;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -16,8 +19,9 @@ public class AppModule {
         mApplication = application;
     }
 
+
     @Provides
-    public Application applicationProvides(){
-        return mApplication;
+    public Context applicationContextProvides(){
+        return mApplication.getApplicationContext();
     }
 }

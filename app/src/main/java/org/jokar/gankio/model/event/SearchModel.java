@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.trello.rxlifecycle.LifecycleTransformer;
 
+import org.jokar.gankio.db.SearchDB;
 import org.jokar.gankio.model.entities.SearchEntities;
 
 import java.util.List;
@@ -14,13 +15,16 @@ import java.util.List;
  */
 public interface SearchModel {
 
-    interface SearchCallback{
-        void start(List<SearchEntities> searchEntities);
+    interface SearchCallback {
+        void start(boolean hasLocalData,List<SearchEntities> searchEntities);
+
         void loadSuccess(List<SearchEntities> searchEntities);
-        void loadError(Throwable e,List<SearchEntities> searchEntities);
+
+        void loadError(Throwable e,boolean hasLocalData);
     }
 
-    void request(String type,
+    void request(SearchDB searchDB,
+                 String type,
                  int count,
                  int page,
                  LifecycleTransformer lifecycleTransformer,

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.trello.rxlifecycle.LifecycleTransformer;
 
 import org.jokar.gankio.app.GankioApplication;
+import org.jokar.gankio.db.SearchDB;
 import org.jokar.gankio.di.component.network.DaggerSearchComponent;
 import org.jokar.gankio.di.module.network.SearchModule;
 import org.jokar.gankio.model.entities.SearchEntities;
@@ -42,12 +43,16 @@ public class SearchModelImpl implements SearchModel {
     }
 
     @Override
-    public void request(String type, int count, int page,
+    public void request(final SearchDB searchDB, String type, int count, int page,
                         LifecycleTransformer lifecycleTransformer,
-                        @NonNull SearchCallback callback) {
+                        @NonNull final SearchCallback callback) {
         checkNotNull(callback);
 
-        mSearchService.search(type,count,page)
+        List<SearchEntities> searchEntitiesList = searchDB.query(type);
+        final boolean hasLocalData = searchEntitiesList ==null ? false:true;
+        callback.start(hasLocalData,searchEntitiesList);
+
+        mSearchService.search(type, count, page)
                 .compose(lifecycleTransformer)
                 .compose(Schedulers.applySchedulersIO())
                 .map(new HttpResultFunc())
@@ -60,12 +65,13 @@ public class SearchModelImpl implements SearchModel {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        callback.loadError(e,hasLocalData);
                     }
 
                     @Override
                     public void onNext(List<SearchEntities> searchEntities) {
-
+                        searchDB.insert(searchEntities);
+                        callback.loadSuccess(searchEntities);
                     }
 
                 });

@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.jokar.gankio.R;
+import org.jokar.gankio.model.rxbus.RxBus;
+import org.jokar.gankio.model.rxbus.event.MainViewPagerEvent;
 import org.jokar.gankio.widget.ErrorView;
 import org.jokar.gankio.widget.LazzyFragment;
 
@@ -39,5 +41,9 @@ public class AllFragment extends LazzyFragment {
 
     }
 
-
+    @Override
+    public void loadData() {
+        super.loadData();
+        RxBus.getBus().send(new MainViewPagerEvent(0));
+    }
 }

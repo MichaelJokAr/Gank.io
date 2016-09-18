@@ -15,6 +15,16 @@ public class JLog {
             Log.d(TAG, value);
     }
 
+    public static void d(int value){
+        if(BuildConfig.LOG_DEBUG)
+            Log.d(TAG, value+"");
+    }
+
+    public static void d(long value){
+        if(BuildConfig.LOG_DEBUG)
+            Log.d(TAG, value+"");
+    }
+
     public static void e(String value){
         if(BuildConfig.LOG_DEBUG)
             Log.e(TAG, value);
