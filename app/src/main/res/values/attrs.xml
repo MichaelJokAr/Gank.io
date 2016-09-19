@@ -18,4 +18,9 @@
 			<enum name="right" value="2" />
 		</attr>
 	</declare-styleable>
+
+	<declare-styleable name="RelativeTimeTextView">
+		<attr name="relative_time_prefix" format="string" />
+		<attr name="relative_time_suffix" format="string" />
+	</declare-styleable>
 </resources>

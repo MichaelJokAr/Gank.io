@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DBhelper extends SQLiteOpenHelper {
     private static final String name = "gankio";
-    private static final int version = 1;
+    private static final int version = 2;
     private static volatile DBhelper instance;
 
     public DBhelper(Context context) {
@@ -26,16 +26,31 @@ public class DBhelper extends SQLiteOpenHelper {
             + SearchDB.rowUrl + " TEXT, "
             + SearchDB.rowWho + " TEXT);";
 
+    private final String DATATABLE = "CREATE TABLE "
+            + DataDB.tableName + " ( "
+            + DataDB.row_id + " TEXT NOT NULL PRIMARY KEY, "
+            + DataDB.rowCreatedAt + " TEXT, "
+            + DataDB.rowDesc + " TEXT, "
+            + DataDB.rowPublishedAt + " TEXT, "
+            + DataDB.rowSource + " TEXT, "
+            + DataDB.rowType + " TEXT, "
+            + DataDB.rowUrl + " TEXT, "
+            + DataDB.rowUsed + " INTEGER, "
+            + DataDB.rowWho + " TEXT);";
+
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
         sqLiteDatabase.execSQL(SEARCHTABLE);
+        sqLiteDatabase.execSQL(DATATABLE);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase,  int oldVersion, int newVersion) {
+        if(newVersion == 2){
+            sqLiteDatabase.execSQL(DATATABLE);
+        }
     }
 
     public static DBhelper getIntance(Context context) {

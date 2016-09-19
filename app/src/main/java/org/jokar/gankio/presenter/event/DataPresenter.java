@@ -2,14 +2,14 @@ package org.jokar.gankio.presenter.event;
 
 import com.trello.rxlifecycle.LifecycleTransformer;
 
-import org.jokar.gankio.db.SearchDB;
+import org.jokar.gankio.db.DataDB;
 
 /**
  * Created by JokAr on 16/9/18.
  */
-public interface SearchPresenter {
+public interface DataPresenter {
 
-    void request(SearchDB searchDB,
+    void request(DataDB searchDB,
                  String type,
                  int count,
                  int page,

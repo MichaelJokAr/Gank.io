@@ -12,6 +12,7 @@ import org.jokar.gankio.model.entities.SearchEntities;
 import org.jokar.gankio.model.event.SearchModel;
 import org.jokar.gankio.model.network.result.HttpResultFunc;
 import org.jokar.gankio.model.network.services.SearchService;
+import org.jokar.gankio.utils.JLog;
 import org.jokar.gankio.utils.Schedulers;
 
 import java.util.List;
@@ -49,8 +50,10 @@ public class SearchModelImpl implements SearchModel {
         checkNotNull(callback);
 
         List<SearchEntities> searchEntitiesList = searchDB.query(type);
-        final boolean hasLocalData = searchEntitiesList ==null ? false:true;
-        callback.start(hasLocalData,searchEntitiesList);
+        final boolean hasLocalData = (searchEntitiesList != null && searchEntitiesList.size() > 0)
+                ? true : false;
+        JLog.d("hasLocalData :" + hasLocalData);
+        callback.start(hasLocalData, searchEntitiesList);
 
         mSearchService.search(type, count, page)
                 .compose(lifecycleTransformer)
@@ -65,11 +68,13 @@ public class SearchModelImpl implements SearchModel {
 
                     @Override
                     public void onError(Throwable e) {
-                        callback.loadError(e,hasLocalData);
+                        JLog.e(e);
+                        callback.loadError(e, hasLocalData);
                     }
 
                     @Override
                     public void onNext(List<SearchEntities> searchEntities) {
+
                         searchDB.insert(searchEntities);
                         callback.loadSuccess(searchEntities);
                     }

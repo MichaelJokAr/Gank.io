@@ -3,4 +3,5 @@
 	<string name="app_name">Gank.io</string>
 	<string name="error_view_retry">重试</string>
 	<string name="error_view_oops">空</string>
+	<string name="just_now">刚刚</string>
 </resources>

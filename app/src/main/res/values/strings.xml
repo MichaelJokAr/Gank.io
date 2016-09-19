@@ -2,4 +2,5 @@
 	<string name="app_name">Gank.io</string>
 	<string name="error_view_oops">Oops</string>
 	<string name="error_view_retry">RETRY</string>
+	<string name="just_now">Just now</string>
 </resources>

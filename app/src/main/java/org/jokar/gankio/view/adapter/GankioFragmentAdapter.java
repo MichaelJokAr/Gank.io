@@ -9,12 +9,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.jokar.gankio.R;
-import org.jokar.gankio.model.entities.SearchEntities;
+import org.jokar.gankio.model.entities.DataEntities;
+import org.jokar.gankio.widget.RelativeTimeTextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,18 +23,18 @@ import butterknife.ButterKnife;
 /**
  * Created by JokAr on 16/9/18.
  */
-public class TypeFragmentAdapter extends RecyclerView.Adapter<TypeFragmentAdapter.ViewHolder> {
+public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAdapter.ViewHolder> {
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<SearchEntities> mSearchEntitiesList;
-    private   SimpleDateFormat sdf;
+    private List<DataEntities> mSearchEntitiesList;
+    private SimpleDateFormat sdf;
 
-    public TypeFragmentAdapter(Context context,List<SearchEntities> mSearchEntitiesList) {
+    public GankioFragmentAdapter(Context context, List<DataEntities> mSearchEntitiesList) {
         mContext = context;
         this.mSearchEntitiesList = mSearchEntitiesList;
         mInflater = LayoutInflater.from(mContext);
-       sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+        sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     }
 
     @Override
@@ -43,11 +44,12 @@ public class TypeFragmentAdapter extends RecyclerView.Adapter<TypeFragmentAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        SearchEntities entities = mSearchEntitiesList.get(position);
+        DataEntities entities = mSearchEntitiesList.get(position);
         holder.tvDesc.setText(entities.getDesc());
         holder.tvWho.setText(entities.getWho());
         try {
-            sdf.format(sdf.parse(entities.getPublishedAt()));
+            Date date = sdf.parse(entities.getPublishedAt());
+            holder.tvTime.setRefreshTime(date.getTime());
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -59,13 +61,13 @@ public class TypeFragmentAdapter extends RecyclerView.Adapter<TypeFragmentAdapte
     }
 
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tvDesc)
         TextView tvDesc;
         @BindView(R.id.tvWho)
         TextView tvWho;
         @BindView(R.id.tvTime)
-        TextView tvTime;
+        RelativeTimeTextView tvTime;
         @BindView(R.id.cardView)
         CardView cardView;
 

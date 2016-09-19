@@ -28,7 +28,7 @@ public class GMTTest {
 
     @Test
     public void test(){
-        String stringDate = "2016-05-12T12:04:43.857000";
+        String stringDate = "2016-09-19T11:36:25.457Z'";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss",Locale.CHINA);
         Date date = null;
         try {

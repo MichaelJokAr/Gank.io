@@ -36,4 +36,9 @@ public class JLog {
             Log.e(TAG, value.getMessage());
         }
     }
+
+    public static void d(boolean value) {
+        if(BuildConfig.LOG_DEBUG)
+            Log.d(TAG, value+"");
+    }
 }

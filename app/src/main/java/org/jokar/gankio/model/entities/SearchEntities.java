@@ -18,7 +18,7 @@ public class SearchEntities {
      */
     @SerializedName("desc")
     private String desc;
-    @SerializedName("deganhuo_idsc")
+    @SerializedName("ganhuo_id")
     private String ganhuo_id;
     @SerializedName("publishedAt")
     private String publishedAt;

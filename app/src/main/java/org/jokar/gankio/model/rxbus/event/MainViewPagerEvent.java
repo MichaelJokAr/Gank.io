@@ -4,17 +4,17 @@ package org.jokar.gankio.model.rxbus.event;
  * Created by JokAr on 16/9/18.
  */
 public class MainViewPagerEvent {
-    int index;
+    String type;
 
-    public MainViewPagerEvent(int index) {
-        this.index = index;
+    public MainViewPagerEvent(String type) {
+        this.type = type;
     }
 
-    public int getIndex() {
-        return index;
+    public String getType() {
+        return type;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
+    public void setType(String type) {
+        this.type = type;
     }
 }

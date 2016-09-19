@@ -46,36 +46,35 @@ public class SearchDB {
                         insert(searchEntities);
                     }
                 });
+
     }
 
     public void insert(SearchEntities searchEntities) {
         SQLiteDatabase db = helper.getWritableDatabase();
         if (db.isOpen()) {
-            db.beginTransaction();
 
             ContentValues values = new ContentValues();
             values.put(rowGanhuo_id, searchEntities.getGanhuo_id());
             values.put(rowDesc, searchEntities.getDesc());
-            values.put(rowPublishedAt,searchEntities.getPublishedAt());
-            values.put(rowReadability,"");
-            values.put(rowType,searchEntities.getType());
-            values.put(rowUrl,searchEntities.getUrl());
-            values.put(rowWho,searchEntities.getWho());
+            values.put(rowPublishedAt, searchEntities.getPublishedAt());
+            values.put(rowReadability, "");
+            values.put(rowType, searchEntities.getType());
+            values.put(rowUrl, searchEntities.getUrl());
+            values.put(rowWho, searchEntities.getWho());
             db.insert(tableName, null, values);
 
-            db.endTransaction();
         }
     }
 
 
-    public List<SearchEntities> query(String type){
+    public List<SearchEntities> query(String type) {
         ArrayList<SearchEntities> searchEntities = null;
         SQLiteDatabase db = helper.getReadableDatabase();
-        if(db.isOpen()){
-            searchEntities  = new ArrayList<>();
-            Cursor cursor = db.query(tableName, null, rowType+" = ? ", new String[]{type},
+        if (db.isOpen()) {
+            searchEntities = new ArrayList<>();
+            Cursor cursor = db.query(tableName, null, rowType + " = ? ", new String[]{type},
                     null, null, rowPublishedAt + " desc ", "15");
-            while (cursor.moveToNext()){
+            while (cursor.moveToNext()) {
                 SearchEntities searchEntitie = new SearchEntities();
                 setData(cursor, searchEntitie);
 
@@ -86,14 +85,14 @@ public class SearchDB {
         return searchEntities;
     }
 
-    public List<SearchEntities> queryAll(){
+    public List<SearchEntities> queryAll() {
         ArrayList<SearchEntities> searchEntities = null;
         SQLiteDatabase db = helper.getReadableDatabase();
-        if(db.isOpen()){
-            searchEntities  = new ArrayList<>();
+        if (db.isOpen()) {
+            searchEntities = new ArrayList<>();
             Cursor cursor = db.query(tableName, null, null, null,
                     null, null, rowPublishedAt + " desc ", "15");
-            while (cursor.moveToNext()){
+            while (cursor.moveToNext()) {
                 SearchEntities searchEntitie = new SearchEntities();
                 setData(cursor, searchEntitie);
 

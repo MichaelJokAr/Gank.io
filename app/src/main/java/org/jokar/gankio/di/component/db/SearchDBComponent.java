@@ -1,10 +1,8 @@
-package org.jokar.gankio.di.component.app;
+package org.jokar.gankio.di.component.db;
 
 import org.jokar.gankio.db.SearchDB;
-import org.jokar.gankio.di.component.AppComponent;
 import org.jokar.gankio.di.module.db.SearchDBModule;
 import org.jokar.gankio.di.scoped.DBScope;
-import org.jokar.gankio.view.fragment.AndroidFragment;
 
 import dagger.Component;
 

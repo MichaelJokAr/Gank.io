@@ -1,5 +1,6 @@
 package org.jokar.gankio.view.fragment;
 
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -7,22 +8,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import com.trello.rxlifecycle.android.FragmentEvent;
 
 import org.jokar.gankio.R;
-import org.jokar.gankio.db.SearchDB;
-import org.jokar.gankio.di.component.app.DaggerSearchDBComponent;
-import org.jokar.gankio.di.component.app.SearchDBComponent;
-import org.jokar.gankio.di.component.preseneter.DaggerSearchPresenterCom;
-import org.jokar.gankio.di.module.db.SearchDBModule;
-import org.jokar.gankio.di.module.models.SearchModelModule;
+import org.jokar.gankio.db.DataDB;
+import org.jokar.gankio.di.component.db.DaggerDataDBCom;
+import org.jokar.gankio.di.component.db.DataDBCom;
+import org.jokar.gankio.di.component.preseneter.DaggerDataPreseneterCom;
+import org.jokar.gankio.di.module.db.DataDBModule;
+import org.jokar.gankio.di.module.models.DataModelModule;
 import org.jokar.gankio.di.module.view.FragmentViewModule;
-import org.jokar.gankio.model.entities.SearchEntities;
+import org.jokar.gankio.model.entities.DataEntities;
 import org.jokar.gankio.model.rxbus.RxBus;
 import org.jokar.gankio.model.rxbus.event.MainViewPagerEvent;
-import org.jokar.gankio.presenter.impl.SearchPresenterImpl;
-import org.jokar.gankio.view.adapter.TypeFragmentAdapter;
+import org.jokar.gankio.presenter.impl.DataPresenterImpl;
+import org.jokar.gankio.view.adapter.GankioFragmentAdapter;
 import org.jokar.gankio.view.ui.FragmentView;
 import org.jokar.gankio.widget.ErrorView;
 import org.jokar.gankio.widget.LazzyFragment;
@@ -35,10 +35,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Android
+ * GanK.io
  * Created by JokAr on 16/9/17.
  */
-public class AndroidFragment extends LazzyFragment implements FragmentView{
+public class GankioFragment extends LazzyFragment implements FragmentView{
 
     @BindView(R.id.errorView)
     ErrorView errorView;
@@ -48,12 +48,21 @@ public class AndroidFragment extends LazzyFragment implements FragmentView{
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Inject
-    SearchPresenterImpl mSearchPresenter;
-
+    DataDB mDataDB;
     @Inject
-    SearchDB mSearchDB;
+    DataPresenterImpl mPresenter;
 
-    private TypeFragmentAdapter mAdapter;
+    private GankioFragmentAdapter mAdapter;
+    private String type;
+
+
+    @Override
+    public void setArguments(Bundle args) {
+        super.setArguments(args);
+        type = args.getString("type");
+    }
+
+
     @Override
     public View getView(LayoutInflater inflater, ViewGroup container) {
         View view = inflater.inflate(R.layout.fragment_all, container, false);
@@ -72,23 +81,23 @@ public class AndroidFragment extends LazzyFragment implements FragmentView{
     @Override
     public void loadData() {
         super.loadData();
-        RxBus.getBus().send(new MainViewPagerEvent(1));
+        RxBus.getBus().send(new MainViewPagerEvent(type));
         //初始化
-        SearchDBComponent searchDBComponent = DaggerSearchDBComponent.builder()
-                .searchDBModule(new SearchDBModule(getContext()))
+
+        DataDBCom dataDBCom = DaggerDataDBCom.builder()
+                .dataDBModule(new DataDBModule(getContext()))
                 .build();
 
-        DaggerSearchPresenterCom.builder()
-                .searchDBComponent(searchDBComponent)
+        DaggerDataPreseneterCom.builder()
+                .dataDBCom(dataDBCom)
                 .fragmentViewModule(new FragmentViewModule(this))
-                .searchModelModule(new SearchModelModule())
+                .dataModelModule(new DataModelModule())
                 .build()
                 .inject(this);
 
-
         //请求数据
-        mSearchPresenter.request(mSearchDB,"Android",15,1,
-                bindUntilEvent(FragmentEvent.STOP));
+        mPresenter.request(mDataDB,type,15,1,bindUntilEvent(FragmentEvent.STOP));
+
     }
 
     @Override
@@ -113,8 +122,8 @@ public class AndroidFragment extends LazzyFragment implements FragmentView{
     }
 
     @Override
-    public void loadStartLocalData(List<SearchEntities> searchEntities) {
-        mAdapter = new TypeFragmentAdapter(getContext(),searchEntities);
+    public void loadStartLocalData(List<DataEntities> searchEntities) {
+        mAdapter = new GankioFragmentAdapter(getContext(),searchEntities);
         recyclerView.setAdapter(mAdapter);
     }
 
@@ -137,8 +146,8 @@ public class AndroidFragment extends LazzyFragment implements FragmentView{
     }
 
     @Override
-    public void loadData(List<SearchEntities> searchEntities) {
-        mAdapter = new TypeFragmentAdapter(getContext(),searchEntities);
+    public void loadData(List<DataEntities> searchEntities) {
+        mAdapter = new GankioFragmentAdapter(getContext(),searchEntities);
         recyclerView.setAdapter(mAdapter);
     }
 }
