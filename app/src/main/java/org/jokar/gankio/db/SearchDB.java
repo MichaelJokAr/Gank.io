@@ -39,13 +39,7 @@ public class SearchDB {
     public void insert(List<SearchEntities> searchEntities) {
 
         Observable.from(searchEntities)
-                .subscribe(new Action1<SearchEntities>() {
-                    @Override
-                    public void call(SearchEntities searchEntities) {
-
-                        insert(searchEntities);
-                    }
-                });
+                .subscribe(this::insert);
 
     }
 

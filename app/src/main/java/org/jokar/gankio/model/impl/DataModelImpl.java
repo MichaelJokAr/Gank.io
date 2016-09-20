@@ -10,6 +10,7 @@ import org.jokar.gankio.di.component.network.DaggerDataComponent;
 import org.jokar.gankio.di.module.network.DataModule;
 import org.jokar.gankio.model.entities.DataEntities;
 import org.jokar.gankio.model.event.DataModel;
+import org.jokar.gankio.model.network.exception.DataException;
 import org.jokar.gankio.model.network.result.HttpResultFunc;
 import org.jokar.gankio.model.network.services.DataService;
 import org.jokar.gankio.utils.JLog;
@@ -22,6 +23,7 @@ import javax.inject.Inject;
 import retrofit2.Retrofit;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 
 import static org.jokar.gankio.utils.Preconditions.checkNotNull;
 
@@ -63,6 +65,16 @@ public class DataModelImpl implements DataModel {
                 .compose(lifecycleTransformer)
                 .compose(Schedulers.applySchedulersIO())
                 .map(new HttpResultFunc())
+                .map(new Func1<List<DataEntities>, List<DataEntities>>() {
+
+                    @Override
+                    public List<DataEntities> call(List<DataEntities> entitiesList) {
+                        if (entitiesList == null || entitiesList.size() == 0) {
+                            throw new DataException("无数据");
+                        }
+                        return entitiesList;
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<DataEntities>>() {
 
@@ -75,6 +87,50 @@ public class DataModelImpl implements DataModel {
                     public void onError(Throwable e) {
                         JLog.e(e);
                         callBack.requestFail(hasLocalData, e);
+                    }
+
+                    @Override
+                    public void onNext(List<DataEntities> dataEntitiesList) {
+                        dataDB.insert(dataEntitiesList);
+                        callBack.requestSuccess(dataEntitiesList);
+                    }
+                });
+    }
+
+    @Override
+    public void refresh(String type, int count, int pageSize, DataDB dataDB,
+                        LifecycleTransformer lifecycleTransformer,
+                        DataCallBack callBack) {
+        checkNotNull(callBack);
+
+        callBack.start(false, null);
+
+        mDataService.getData(type, count, pageSize)
+                .compose(lifecycleTransformer)
+                .compose(Schedulers.applySchedulersIO())
+                .map(new HttpResultFunc())
+                .map(new Func1<List<DataEntities>, List<DataEntities>>() {
+
+                    @Override
+                    public List<DataEntities> call(List<DataEntities> entitiesList) {
+                        if (entitiesList == null || entitiesList.size() == 0) {
+                            throw new IllegalAccessError("无数据");
+                        }
+                        return entitiesList;
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<DataEntities>>() {
+
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        JLog.e(e);
+                        callBack.requestFail(false, e);
                     }
 
                     @Override

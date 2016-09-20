@@ -22,10 +22,12 @@ import org.jokar.gankio.model.entities.DataEntities;
 import org.jokar.gankio.model.rxbus.RxBus;
 import org.jokar.gankio.model.rxbus.event.MainViewPagerEvent;
 import org.jokar.gankio.presenter.impl.DataPresenterImpl;
+import org.jokar.gankio.utils.JToast;
 import org.jokar.gankio.view.adapter.GankioFragmentAdapter;
 import org.jokar.gankio.view.ui.FragmentView;
 import org.jokar.gankio.widget.ErrorView;
 import org.jokar.gankio.widget.LazzyFragment;
+import org.jokar.gankio.widget.RecyclerOnScrollListener;
 
 import java.util.List;
 
@@ -38,7 +40,7 @@ import butterknife.ButterKnife;
  * GanK.io
  * Created by JokAr on 16/9/17.
  */
-public class GankioFragment extends LazzyFragment implements FragmentView{
+public class GankioFragment extends LazzyFragment implements FragmentView {
 
     @BindView(R.id.errorView)
     ErrorView errorView;
@@ -54,7 +56,10 @@ public class GankioFragment extends LazzyFragment implements FragmentView{
 
     private GankioFragmentAdapter mAdapter;
     private String type;
+    private int pageSize = 1;
+    private int count = 15;
 
+    private List<DataEntities> mDataEntitiesList;
 
     @Override
     public void setArguments(Bundle args) {
@@ -72,9 +77,29 @@ public class GankioFragment extends LazzyFragment implements FragmentView{
 
     @Override
     public void initViews(View view) {
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(linearLayoutManager);
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_light
                 , android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light);
+
+        recyclerView.addOnScrollListener(new RecyclerOnScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int currentPage) {
+                mAdapter.setFootClickable(false);
+                pageSize++;
+                mPresenter.loadMore(mDataDB, type, count, pageSize, bindUntilEvent(FragmentEvent.STOP));
+            }
+        });
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            errorView.setRetryButtonClickable(false);
+            mPresenter.refrsh(mDataDB, type, count, 1, bindUntilEvent(FragmentEvent.STOP));
+        });
+
+        errorView.setOnRetryListener(() -> {
+            showLoadProgress();
+            errorView.setRetryButtonClickable(false);
+            mPresenter.refrsh(mDataDB, type, count, 1, bindUntilEvent(FragmentEvent.STOP));
+        });
 
     }
 
@@ -82,8 +107,8 @@ public class GankioFragment extends LazzyFragment implements FragmentView{
     public void loadData() {
         super.loadData();
         RxBus.getBus().send(new MainViewPagerEvent(type));
-        //初始化
 
+        //初始化
         DataDBCom dataDBCom = DaggerDataDBCom.builder()
                 .dataDBModule(new DataDBModule(getContext()))
                 .build();
@@ -96,40 +121,34 @@ public class GankioFragment extends LazzyFragment implements FragmentView{
                 .inject(this);
 
         //请求数据
-        mPresenter.request(mDataDB,type,15,1,bindUntilEvent(FragmentEvent.STOP));
+        mPresenter.request(mDataDB, type, 15, 1, bindUntilEvent(FragmentEvent.STOP));
 
     }
 
     @Override
     public void showLoadProgress() {
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(true);
-            }
-        });
+        swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(true));
 
     }
 
     @Override
     public void completeLoadProgress() {
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
+        swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(false));
     }
 
     @Override
     public void loadStartLocalData(List<DataEntities> searchEntities) {
-        mAdapter = new GankioFragmentAdapter(getContext(),searchEntities);
+        mDataEntitiesList = searchEntities;
+        mAdapter = new GankioFragmentAdapter(getContext(), type, mDataEntitiesList);
         recyclerView.setAdapter(mAdapter);
+        setAdapterClick();
     }
 
     @Override
     public void loadStartNoLocalData() {
-
+        errorView.setVisibility(View.GONE);
+        errorView.setRetryButtonClickable(true);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -142,12 +161,51 @@ public class GankioFragment extends LazzyFragment implements FragmentView{
 
     @Override
     public void loadNoData(Throwable e) {
-
+        JToast.Toast(getContext(), e.getMessage());
     }
 
     @Override
     public void loadData(List<DataEntities> searchEntities) {
-        mAdapter = new GankioFragmentAdapter(getContext(),searchEntities);
+        if (errorView.isShown()) {
+            errorView.setVisibility(View.GONE);
+            errorView.setRetryButtonClickable(true);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+        mDataEntitiesList = searchEntities;
+        mAdapter = new GankioFragmentAdapter(getContext(), type, mDataEntitiesList);
         recyclerView.setAdapter(mAdapter);
+        setAdapterClick();
+    }
+
+    @Override
+    public void refreshFail(Throwable e) {
+        if (errorView.isShown()) {
+            errorView.showError("刷新失败: " + e.getMessage(), true);
+        } else {
+            JToast.Toast(getContext(), "刷新失败: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void loadMore(List<DataEntities> dataEntitiesList) {
+        mDataEntitiesList.addAll(dataEntitiesList);
+        mAdapter.notifyDataSetChanged();
+        recyclerView.scrollToPosition(mAdapter.getItemCount() - count);
+    }
+
+    @Override
+    public void loadMoreFail(Throwable e) {
+        JToast.Toast(getContext(), "加载失败: " + e.getMessage());
+        pageSize--;
+        mAdapter.setFootClickable(true);
+        mAdapter.footShowClickText();
+    }
+
+    public void setAdapterClick() {
+        mAdapter.setFootViewListener(() -> {
+            mAdapter.setFootClickable(false);
+            pageSize++;
+            mPresenter.loadMore(mDataDB, type, count, pageSize, bindUntilEvent(FragmentEvent.STOP));
+        });
     }
 }

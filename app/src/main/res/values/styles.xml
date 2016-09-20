@@ -20,4 +20,12 @@
 		<item name="android:activityCloseEnterAnimation">@anim/in_from_left</item>
 		<item name="android:activityCloseExitAnimation">@anim/out_from_right</item>
 	</style>
+
+	<style name="NavigationTab" parent="Widget.Design.TabLayout">
+		<item name="tabTextAppearance">@style/NavigationTabTextAppeareance</item>
+	</style>
+
+	<style name="NavigationTabTextAppeareance" parent="TextAppearance.Design.Tab">
+		<item name="android:textSize">12sp</item>
+	</style>
 </resources>

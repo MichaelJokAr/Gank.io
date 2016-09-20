@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
 
 Properties props = new Properties()
 props.load(new FileInputStream(file("configuration.properties")))
@@ -13,6 +12,10 @@ android {
         targetSdkVersion 24
         versionCode props.getAt("versionCode") as int
         versionName props['versionName']
+
+        jackOptions {
+            enabled true
+        }
     }
 
     signingConfigs {
@@ -36,7 +39,7 @@ android {
         debug {
             signingConfig signingConfigs.release
             zipAlignEnabled true
-            shrinkResources true
+            shrinkResources false
             buildConfigField("boolean", "LOG_DEBUG", "true")
             debuggable true
             jniDebuggable true
@@ -44,12 +47,10 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
-    dexOptions {
-        incremental true
-    }
+
 }
 
 dependencies {
@@ -61,9 +62,10 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:design:24.2.1'
     compile 'com.android.support:cardview-v7:24.2.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
     //view注释
     compile 'com.jakewharton:butterknife:latest.release'
-    apt 'com.jakewharton:butterknife-compiler:latest.release'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:latest.release'
     //图片加载工具
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
@@ -84,7 +86,10 @@ dependencies {
     //PhotoView
     compile 'com.commit451:PhotoView:latest.release'
     //dagger2
-    apt 'com.google.dagger:dagger-compiler:latest.release'
+    annotationProcessor 'com.google.dagger:dagger-compiler:latest.release'
     compile 'com.google.dagger:dagger:latest.release'
     provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support:gridlayout-v7:24.2.1'
 }

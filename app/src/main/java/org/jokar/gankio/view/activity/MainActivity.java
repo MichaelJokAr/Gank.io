@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -39,7 +40,8 @@ public class MainActivity extends BaseActivity {
     // all | Android | iOS | 休息视频 | 福利 | 拓展资源 | 前端 | 瞎推荐 | App
     private List<String> types = Arrays.asList("all", "Android", "iOS", "休息视频", "福利", "拓展资源", "前端", "瞎推荐", "App");
 
-    private ArrayList<String>  viewPageOffscreenCount;
+    private ArrayList<String> viewPageOffscreenCount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +58,26 @@ public class MainActivity extends BaseActivity {
         viewPageOffscreenCount = new ArrayList<>();
         viewPageOffscreenCount.add("All");
         mPagerAdapter = new FragmentAdapter(getSupportFragmentManager());
+        addFragmet();
+
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        tabLayout.setSelectedTabIndicatorColor(Color.WHITE);
+        tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
+        viewPager.setAdapter(mPagerAdapter);
+        viewPager.setOffscreenPageLimit(viewPageOffscreenCount.size());
+
+        RxBus.getBus().toMainThreadObserverable(bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(event -> {
+                    //设置viewpager缓存
+                    setOffscreenPageLimit((MainViewPagerEvent) event);
+                });
+    }
+
+    /**
+     * 添加fragment
+     */
+    private void addFragmet() {
         {
             GankioFragment gankioFragment = new GankioFragment();
             Bundle args = new Bundle();
@@ -115,36 +137,20 @@ public class MainActivity extends BaseActivity {
         {
             GankioFragment gankioFragment = new GankioFragment();
             Bundle args = new Bundle();
-            args.putString("type", "APP");
+            args.putString("type", "App");
             gankioFragment.setArguments(args);
-            mPagerAdapter.addFragments(gankioFragment, "APP");
+            mPagerAdapter.addFragments(gankioFragment, "App");
         }
-
-        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        viewPager.setAdapter(mPagerAdapter);
-        viewPager.setOffscreenPageLimit(viewPageOffscreenCount.size());
-
-        RxBus.getBus().toMainThreadObserverable(bindUntilEvent(ActivityEvent.DESTROY))
-                .subscribe(new Action1<Object>() {
-
-                    @Override
-                    public void call(Object o) {
-                        if(o instanceof MainViewPagerEvent){
-                            //设置viewpager缓存
-                            setOffscreenPageLimit((MainViewPagerEvent)o);
-                        }
-                    }
-                });
     }
 
     /**
      * 设置viewpager缓存
+     *
      * @param event
      */
     private void setOffscreenPageLimit(MainViewPagerEvent event) {
         String type = event.getType();
-        if(!viewPageOffscreenCount.contains(type)){
+        if (!viewPageOffscreenCount.contains(type)) {
             viewPageOffscreenCount.add(type);
             viewPager.setOffscreenPageLimit(viewPageOffscreenCount.size());
 
@@ -160,7 +166,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu,menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 }

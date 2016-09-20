@@ -35,4 +35,20 @@ public interface DataModel {
                  DataDB dataDB,
                  LifecycleTransformer lifecycleTransformer,
                  DataCallBack callBack);
+
+    /**
+     * 请求数据
+     * @param type  数据类型： 福利 | Android | iOS | 休息视频 | 拓展资源 | 前端 | all
+     * @param count 请求个数： 数字，大于0
+     * @param pageSize 第几页：数字，大于0
+     * @param dataDB
+     * @param lifecycleTransformer
+     * @param callBack
+     */
+    void refresh(String type,
+                 int count,
+                 int pageSize,
+                 DataDB dataDB,
+                 LifecycleTransformer lifecycleTransformer,
+                 DataCallBack callBack);
 }

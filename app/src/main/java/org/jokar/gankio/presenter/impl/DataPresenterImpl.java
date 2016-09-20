@@ -37,6 +37,7 @@ public class DataPresenterImpl implements DataPresenter {
                 new DataModel.DataCallBack() {
                     @Override
                     public void start(boolean hasLocalData, List<DataEntities> dataEntitiesList) {
+                        mFragmentView.showLoadProgress();
                         if (hasLocalData) {
                             mFragmentView.loadStartLocalData(dataEntitiesList);
                         } else {
@@ -47,11 +48,64 @@ public class DataPresenterImpl implements DataPresenter {
                     @Override
                     public void requestSuccess(List<DataEntities> dataEntitiesList) {
                         mFragmentView.loadData(dataEntitiesList);
+                        mFragmentView.completeLoadProgress();
                     }
 
                     @Override
                     public void requestFail(boolean hasLocalData, Throwable e) {
+                        mFragmentView.completeLoadProgress();
+                        if (hasLocalData) {
+                            mFragmentView.loadNoData(e);
+                        } else {
+                            mFragmentView.loadNoLoacalData(e);
+                        }
+                    }
+                });
+    }
 
+    @Override
+    public void refrsh(DataDB dataDB, String type, int count, int pageSize, LifecycleTransformer lifecycleTransformer) {
+        mDataModel.request(type, count, pageSize, dataDB, lifecycleTransformer,
+                new DataModel.DataCallBack() {
+                    @Override
+                    public void start(boolean hasLocalData, List<DataEntities> dataEntitiesList) {
+
+                    }
+
+                    @Override
+                    public void requestSuccess(List<DataEntities> dataEntitiesList) {
+
+                        mFragmentView.loadData(dataEntitiesList);
+                        mFragmentView.completeLoadProgress();
+
+                    }
+
+                    @Override
+                    public void requestFail(boolean hasLocalData, Throwable e) {
+                        mFragmentView.completeLoadProgress();
+                        mFragmentView.refreshFail(e);
+                    }
+                });
+    }
+
+    @Override
+    public void loadMore(DataDB dataDB, String type, int count,
+                         int pageSize, LifecycleTransformer lifecycleTransformer) {
+        mDataModel.refresh(type, count, pageSize, dataDB, lifecycleTransformer,
+                new DataModel.DataCallBack() {
+                    @Override
+                    public void start(boolean hasLocalData, List<DataEntities> dataEntitiesList) {
+
+                    }
+
+                    @Override
+                    public void requestSuccess(List<DataEntities> dataEntitiesList) {
+                        mFragmentView.loadMore(dataEntitiesList);
+                    }
+
+                    @Override
+                    public void requestFail(boolean hasLocalData, Throwable e) {
+                        mFragmentView.loadMoreFail(e);
                     }
                 });
     }

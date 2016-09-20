@@ -13,7 +13,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by JokAr on 16/9/19.
@@ -42,12 +42,8 @@ public class DataDB {
     public void insert(List<DataEntities> dataEntitiesList) {
 
         Observable.from(dataEntitiesList)
-                .subscribe(new Action1<DataEntities>() {
-                    @Override
-                    public void call(DataEntities entities) {
-                        insert(entities);
-                    }
-                });
+                .observeOn(Schedulers.computation())
+                .subscribe(this::insert);
     }
 
     public void insert(DataEntities entitie) {

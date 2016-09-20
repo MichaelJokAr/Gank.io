@@ -14,4 +14,17 @@ public interface DataPresenter {
                  int count,
                  int page,
                  LifecycleTransformer lifecycleTransformer);
+
+
+    void refrsh(DataDB dataDB,
+                String type,
+                int count,
+                int pageSize,
+                LifecycleTransformer lifecycleTransformer);
+
+    void loadMore(DataDB dataDB,
+                  String type,
+                  int count,
+                  int pageSize,
+                  LifecycleTransformer lifecycleTransformer);
 }

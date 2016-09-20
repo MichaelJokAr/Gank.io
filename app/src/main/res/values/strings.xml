@@ -3,4 +3,6 @@
 	<string name="error_view_oops">Oops</string>
 	<string name="error_view_retry">RETRY</string>
 	<string name="just_now">Just now</string>
+	<string name="loading">Lodaing...</string>
+	<string name="reload">Click to reload</string>
 </resources>

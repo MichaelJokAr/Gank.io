@@ -21,5 +21,11 @@ public interface FragmentView {
 
     void loadNoData(Throwable e);
 
-    void loadData(List<DataEntities> searchEntities);
+    void loadData(List<DataEntities> dataEntitiesList);
+
+    void refreshFail(Throwable e);
+
+    void loadMore(List<DataEntities> dataEntitiesList);
+
+    void loadMoreFail(Throwable e);
 }

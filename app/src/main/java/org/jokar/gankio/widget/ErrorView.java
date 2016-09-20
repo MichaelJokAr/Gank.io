@@ -468,11 +468,29 @@ public class ErrorView extends LinearLayout {
     }
 
     /**
+     *
+     * @param value
+     */
+    public void setRetryButtonClickable(boolean value){
+        mRetryButton.setClickable(value);
+    }
+
+    /**
      * display loading failed view
      */
     public void showError(String error) {
         pb_loda.setVisibility(GONE);
         ll_continear.setVisibility(VISIBLE);
+        setSubtitle(error);
+    }
+
+    /**
+     * display loading failed view
+     */
+    public void showError(String error,boolean clickable) {
+        pb_loda.setVisibility(GONE);
+        ll_continear.setVisibility(VISIBLE);
+        setRetryButtonClickable(clickable);
         setSubtitle(error);
     }
 
