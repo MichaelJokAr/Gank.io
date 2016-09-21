@@ -38,4 +38,17 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+	<android.support.design.widget.FloatingActionButton
+		android:id="@+id/fab"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="right|bottom|end"
+		android:layout_marginBottom="15dp"
+		android:layout_marginRight="15dp"
+		android:clickable="true"
+		android:src="@mipmap/ic_add_white_24dp"
+		android:transitionName="@string/transition_name_addGank"
+		app:layout_behavior="org.jokar.gankio.widget.ScrollAwareFabBehavior"
+		app:pressedTranslationZ="12dp"/>
 </android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item android:title="提交"
+	      android:id="@+id/submit"
+	      android:visible="true"
+	      android:checkable="true"
+	      app:showAsAction="always|withText"
+	      android:icon="@mipmap/ic_done"/>
+</menu>

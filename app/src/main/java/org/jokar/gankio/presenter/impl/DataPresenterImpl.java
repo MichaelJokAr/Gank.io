@@ -48,7 +48,7 @@ public class DataPresenterImpl implements DataPresenter {
                     @Override
                     public void requestSuccess(List<DataEntities> dataEntitiesList) {
                         mFragmentView.loadData(dataEntitiesList);
-                        mFragmentView.completeLoadProgress();
+
                     }
 
                     @Override
@@ -59,6 +59,11 @@ public class DataPresenterImpl implements DataPresenter {
                         } else {
                             mFragmentView.loadNoLoacalData(e);
                         }
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        mFragmentView.completeLoadProgress();
                     }
                 });
     }
@@ -76,7 +81,6 @@ public class DataPresenterImpl implements DataPresenter {
                     public void requestSuccess(List<DataEntities> dataEntitiesList) {
 
                         mFragmentView.loadData(dataEntitiesList);
-                        mFragmentView.completeLoadProgress();
 
                     }
 
@@ -84,6 +88,11 @@ public class DataPresenterImpl implements DataPresenter {
                     public void requestFail(boolean hasLocalData, Throwable e) {
                         mFragmentView.completeLoadProgress();
                         mFragmentView.refreshFail(e);
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        mFragmentView.completeLoadProgress();
                     }
                 });
     }
@@ -106,6 +115,11 @@ public class DataPresenterImpl implements DataPresenter {
                     @Override
                     public void requestFail(boolean hasLocalData, Throwable e) {
                         mFragmentView.loadMoreFail(e);
+                    }
+
+                    @Override
+                    public void onCompleted() {
+
                     }
                 });
     }

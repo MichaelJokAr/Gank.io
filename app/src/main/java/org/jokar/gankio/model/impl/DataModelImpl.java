@@ -80,7 +80,7 @@ public class DataModelImpl implements DataModel {
 
                     @Override
                     public void onCompleted() {
-
+                        callBack.onCompleted();
                     }
 
                     @Override
@@ -124,7 +124,7 @@ public class DataModelImpl implements DataModel {
 
                     @Override
                     public void onCompleted() {
-
+                        callBack.onCompleted();
                     }
 
                     @Override

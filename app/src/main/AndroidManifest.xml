@@ -4,13 +4,14 @@
 
 	<uses-permission android:name="android.permission.INTERNET"/>
 	<application
+		android:name=".app.GankioApplication"
 		android:allowBackup="true"
 		android:icon="@mipmap/ic_launcher"
 		android:label="@string/app_name"
 		android:supportsRtl="true"
-		android:name=".app.GankioApplication"
 		android:theme="@style/AppTheme">
-		<activity android:name=".view.activity.SplashViewActivity"
+		<activity
+			android:name=".view.activity.SplashViewActivity"
 			android:theme="@style/SplahsTheme">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -21,7 +22,14 @@
 
 		<activity android:name=".view.activity.MainActivity"/>
 
-		<meta-data android:name="org.jokar.gankio.app.GlideModuleSetting"
+		<activity android:name=".view.activity.GankActivity"/>
+		<activity
+			android:name=".view.activity.AddGankActivity"
+			android:windowSoftInputMode="stateHidden|adjustResize"
+			android:theme="@style/AddGankTheme"/>
+
+		<meta-data
+			android:name="org.jokar.gankio.app.GlideModuleSetting"
 			android:value="GlideModule"/>
 	</application>
 

@@ -6,4 +6,7 @@
 	<string name="just_now">刚刚</string>
 	<string name="loading">正在加载...</string>
 	<string name="reload">点击重新加载</string>
+	<string name="share">分享</string>
+	<string name="openUrl">在浏览器中打开</string>
+	<string name="copyUrl">复制链接</string>
 </resources>

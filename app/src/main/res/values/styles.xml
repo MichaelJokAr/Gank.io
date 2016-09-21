@@ -5,12 +5,20 @@
 		<!-- Customize your theme here. -->
 		<item name="colorPrimary">@color/colorPrimary</item>
 		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-		<item name="colorAccent">@color/colorAccent</item>
+		<item name="colorAccent">@color/colorPrimary</item>
 		<item name="android:windowAnimationStyle">@style/FeelyouWindowAnimTheme</item>
 	</style>
 
 	<style name="SplahsTheme" parent="AppTheme">
 		<item name="android:windowIsTranslucent">true</item>
+	</style>
+
+	<style name="AddGankTheme" parent="Theme.AppCompat.Light.NoActionBar">
+		<!-- Customize your theme here. -->
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/colorPrimary</item>
+		<item name="android:windowAnimationStyle">@style/FageWIndowAnim</item>
 	</style>
 
 	<!--activity从左向右进入动画-->
@@ -19,6 +27,14 @@
 		<item name="android:activityOpenExitAnimation">@anim/out_from_left</item>
 		<item name="android:activityCloseEnterAnimation">@anim/in_from_left</item>
 		<item name="android:activityCloseExitAnimation">@anim/out_from_right</item>
+	</style>
+
+
+	<style name="FageWIndowAnim" parent="@android:style/Animation.Activity">
+		<item name="android:activityOpenEnterAnimation">@android:anim/fade_in</item>
+		<item name="android:activityOpenExitAnimation">@android:anim/fade_out</item>
+		<item name="android:activityCloseEnterAnimation">@android:anim/fade_in</item>
+		<item name="android:activityCloseExitAnimation">@android:anim/fade_out</item>
 	</style>
 
 	<style name="NavigationTab" parent="Widget.Design.TabLayout">

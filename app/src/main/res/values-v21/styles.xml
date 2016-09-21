@@ -5,11 +5,18 @@
 		<!-- Customize your theme here. -->
 		<item name="colorPrimary">@color/colorPrimary</item>
 		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-		<item name="colorAccent">@color/colorAccent</item>
+		<item name="colorAccent">@color/colorPrimary</item>
 		<item name="android:windowAnimationStyle">@style/FeelyouWindowAnimTheme</item>
 	</style>
 
 	<style name="SplahsTheme" parent="AppTheme">
 		<item name="android:windowIsTranslucent">true</item>
+	</style>
+
+	<style name="AddGankTheme" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/colorPrimary</item>
+		<item name="android:windowAnimationStyle">@style/FageWIndowAnim</item>
 	</style>
 </resources>

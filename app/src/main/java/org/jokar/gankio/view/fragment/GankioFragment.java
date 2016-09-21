@@ -1,5 +1,6 @@
 package org.jokar.gankio.view.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +24,7 @@ import org.jokar.gankio.model.rxbus.RxBus;
 import org.jokar.gankio.model.rxbus.event.MainViewPagerEvent;
 import org.jokar.gankio.presenter.impl.DataPresenterImpl;
 import org.jokar.gankio.utils.JToast;
+import org.jokar.gankio.view.activity.GankActivity;
 import org.jokar.gankio.view.adapter.GankioFragmentAdapter;
 import org.jokar.gankio.view.ui.FragmentView;
 import org.jokar.gankio.widget.ErrorView;
@@ -202,10 +204,26 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
     }
 
     public void setAdapterClick() {
-        mAdapter.setFootViewListener(() -> {
-            mAdapter.setFootClickable(false);
-            pageSize++;
-            mPresenter.loadMore(mDataDB, type, count, pageSize, bindUntilEvent(FragmentEvent.STOP));
+
+        mAdapter.setOnItemClickListener(new GankioFragmentAdapter.ItemClickListener() {
+            @Override
+            public void itemClick(DataEntities dataEntities) {
+                if(dataEntities.getType().equals("福利")){
+
+                }else {
+                    Intent intent = new Intent(getActivity(), GankActivity.class);
+                    intent.putExtra("dataEntities",dataEntities);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void footViewClick() {
+                mAdapter.setFootClickable(false);
+                pageSize++;
+                mPresenter.loadMore(mDataDB, type, count, pageSize,
+                        bindUntilEvent(FragmentEvent.STOP));
+            }
         });
     }
 }

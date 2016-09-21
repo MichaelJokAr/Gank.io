@@ -1,11 +1,14 @@
 package org.jokar.gankio.model.entities;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by JokAr on 16/9/19.
  */
-public class DataEntities {
+public class DataEntities implements Parcelable {
 
     /**
      * _id : 57de9714421aa95bc338982c
@@ -123,4 +126,49 @@ public class DataEntities {
                 ", who='" + who + '\'' +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this._id);
+        dest.writeString(this.createdAt);
+        dest.writeString(this.desc);
+        dest.writeString(this.publishedAt);
+        dest.writeString(this.source);
+        dest.writeString(this.type);
+        dest.writeString(this.url);
+        dest.writeByte(this.used ? (byte) 1 : (byte) 0);
+        dest.writeString(this.who);
+    }
+
+    public DataEntities() {
+    }
+
+    protected DataEntities(Parcel in) {
+        this._id = in.readString();
+        this.createdAt = in.readString();
+        this.desc = in.readString();
+        this.publishedAt = in.readString();
+        this.source = in.readString();
+        this.type = in.readString();
+        this.url = in.readString();
+        this.used = in.readByte() != 0;
+        this.who = in.readString();
+    }
+
+    public static final Parcelable.Creator<DataEntities> CREATOR = new Parcelable.Creator<DataEntities>() {
+        @Override
+        public DataEntities createFromParcel(Parcel source) {
+            return new DataEntities(source);
+        }
+
+        @Override
+        public DataEntities[] newArray(int size) {
+            return new DataEntities[size];
+        }
+    };
 }

@@ -1,14 +1,9 @@
 package org.jokar.gankio.view.activity;
 
 import android.graphics.Color;
-import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-
-import org.jokar.gankio.presenter.BasePresenter;
 
 
 /**
@@ -23,12 +18,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> finish());
     }
 
 }

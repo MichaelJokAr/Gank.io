@@ -41,4 +41,13 @@ public class GMTTest {
         sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         System.out.println(sdf.format(date));
     }
+
+    @Test
+    public void test2(){
+        Integer integer1 =1;
+        Integer integer2 =1;
+        Integer integer3 =2;
+        Integer integer4 =2;
+        System.out.println(integer1 == integer2);
+    }
 }

@@ -5,12 +5,13 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:layout_margin="@dimen/cardview_margin"
-	android:background="?android:attr/selectableItemBackground"
 	android:elevation="0dp">
 
 	<LinearLayout
+		android:id="@+id/ll_continear"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:background="?android:attr/selectableItemBackground"
 		android:orientation="vertical">
 
 		<ImageView

@@ -1,13 +1,18 @@
 package org.jokar.gankio.view.activity;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.View;
 
 import com.trello.rxlifecycle.android.ActivityEvent;
 
@@ -18,12 +23,10 @@ import org.jokar.gankio.view.adapter.FragmentAdapter;
 import org.jokar.gankio.view.fragment.GankioFragment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.functions.Action1;
+import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity {
 
@@ -33,12 +36,14 @@ public class MainActivity extends BaseActivity {
     TabLayout tabLayout;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
 
 
     private FragmentAdapter mPagerAdapter;
     private ArrayList<Fragment> mFragments;
     // all | Android | iOS | 休息视频 | 福利 | 拓展资源 | 前端 | 瞎推荐 | App
-    private List<String> types = Arrays.asList("all", "Android", "iOS", "休息视频", "福利", "拓展资源", "前端", "瞎推荐", "App");
+//    private List<String> types = Arrays.asList("all", "Android", "iOS", "休息视频", "福利", "拓展资源", "前端", "瞎推荐", "App");
 
     private ArrayList<String> viewPageOffscreenCount;
 
@@ -168,5 +173,11 @@ public class MainActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @OnClick(R.id.fab)
+    public void addGank(View view) {
+        Intent intent = new Intent(this, AddGankActivity.class);
+        startActivity(intent);
     }
 }

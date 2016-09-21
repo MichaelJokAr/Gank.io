@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.jakewharton.rxbinding.view.RxView;
 
 import org.jokar.gankio.R;
 import org.jokar.gankio.model.entities.DataEntities;
@@ -23,6 +24,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import rx.functions.Action1;
 
 
 /**
@@ -36,7 +39,7 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
     private SimpleDateFormat sdf;
     private String mType;
     public FootViewHolder mFootViewHolder;
-    private FootViewListener mFootViewListener;
+    private ItemClickListener mClickListener;
 
     public GankioFragmentAdapter(Context context, String type,
                                  List<DataEntities> mSearchEntitiesList) {
@@ -68,29 +71,40 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
     public void onBindViewHolder(GankViewHolder holder, int position) {
 
         switch (getItemViewType(position)) {
-            case 0: {
+            case 0: {//非图片类型
                 DataEntities entities = mSearchEntitiesList.get(position);
                 holder.setWho(entities.getWho());
                 ViewHolder viewHolder = (ViewHolder) holder;
                 viewHolder.tvDesc.setText(entities.getDesc());
-
                 try {
                     Date date = sdf.parse(entities.getPublishedAt());
                     viewHolder.tvTime.setRefreshTime(date.getTime());
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
+                //设置点击事件
+                RxView.clicks(viewHolder.ll_continear).subscribe(aVoid ->{
+                    if (mClickListener != null) {
+                        mClickListener.itemClick(entities);
+                    }
+                });
                 break;
             }
-            case 1: {
+            case 1: { //图片类型
                 DataEntities entities = mSearchEntitiesList.get(position);
                 holder.setWho(entities.getWho());
                 ImageViewHolder imageViewHolder = (ImageViewHolder) holder;
                 imageViewHolder.tvTime.setText(entities.getDesc());
                 imageViewHolder.loadImage(entities.getUrl(), mContext);
+                //设置点击事件
+                RxView.clicks(imageViewHolder.ll_continear).subscribe(aVoid -> {
+                    if (mClickListener != null) {
+                        mClickListener.itemClick(entities);
+                    }
+                });
                 break;
             }
-            case 2: {
+            case 2: {//all
                 DataEntities entities = mSearchEntitiesList.get(position);
                 holder.setWho(entities.getWho());
                 AllViewHolder allViewHolder = (AllViewHolder) holder;
@@ -102,13 +116,21 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
+                //设置点击事件
+
+                RxView.clicks(allViewHolder.ll_continear).subscribe(aVoid -> {
+                    if (mClickListener != null) {
+                        mClickListener.itemClick(entities);
+                    }
+                });
                 break;
             }
-            case 3:{
-                mFootViewHolder.ll_foot.setOnClickListener(v -> {
-                    if(mFootViewListener!=null){
+            case 3: {//footView
+                //设置点击事件
+                RxView.clicks(mFootViewHolder.ll_foot).subscribe(aVoid ->{
+                    if (mClickListener != null) {
                         mFootViewHolder.showProgress();
-                        mFootViewListener.onClick();
+                        mClickListener.footViewClick();
                     }
                 });
             }
@@ -123,9 +145,9 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
 
     @Override
     public int getItemViewType(int position) {
-        if(position == getItemCount()-1){
+        if (position == getItemCount() - 1) {
             return 3;
-        }else {
+        } else {
             DataEntities dataEntities = mSearchEntitiesList.get(position);
             if (mType.equals("all")) {
                 if (dataEntities.getType().equals("福利")) {
@@ -144,22 +166,22 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
 
     }
 
-    public void setFootViewListener(FootViewListener footViewListener) {
-        mFootViewListener = footViewListener;
+    public void setOnItemClickListener(ItemClickListener listener) {
+        mClickListener = listener;
     }
 
     class ViewHolder extends GankViewHolder {
 
         TextView tvDesc;
         RelativeTimeTextView tvTime;
-        CardView cardView;
 
         ViewHolder(View view) {
             super(view);
             tvDesc = (TextView) view.findViewById(R.id.tvDesc);
-
+            cardView = (CardView) itemView.findViewById(R.id.cardView);
             tvTime = (RelativeTimeTextView) view.findViewById(R.id.tvTime);
             cardView = (CardView) view.findViewById(R.id.cardView);
+            ll_continear = (LinearLayout) itemView.findViewById(R.id.ll_continear);
         }
     }
 
@@ -171,6 +193,8 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
             super(itemView);
             image = (ImageView) itemView.findViewById(R.id.image);
             tvTime = (TextView) itemView.findViewById(R.id.tvTime);
+            cardView = (CardView) itemView.findViewById(R.id.cardView);
+            ll_continear = (LinearLayout) itemView.findViewById(R.id.ll_continear);
         }
 
         public void loadImage(String url, Context context) {
@@ -185,10 +209,13 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
     class GankViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvWho;
+        CardView cardView;
+        LinearLayout ll_continear;
 
         public GankViewHolder(View itemView) {
             super(itemView);
             tvWho = (TextView) itemView.findViewById(R.id.tvWho);
+
         }
 
         public void setWho(String who) {
@@ -208,7 +235,8 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
             tvDesc = (TextView) view.findViewById(R.id.tvDesc);
             tvType = (TextView) view.findViewById(R.id.tvType);
             tvTime = (RelativeTimeTextView) view.findViewById(R.id.tvTime);
-            cardView = (CardView) view.findViewById(R.id.cardView);
+            cardView = (CardView) itemView.findViewById(R.id.cardView);
+            ll_continear = (LinearLayout) itemView.findViewById(R.id.ll_continear);
         }
     }
 
@@ -225,34 +253,38 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
 //            progressBar.getProgressDrawable().setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
         }
 
-        public void setClickable(boolean clickable){
+        public void setClickable(boolean clickable) {
             ll_foot.setClickable(clickable);
         }
 
-        public void showProgress(){
+        public void showProgress() {
             progressBar.setVisibility(View.VISIBLE);
             tvLoad.setText(mContext.getString(R.string.loading));
         }
 
-        public void showClickText(){
+        public void showClickText() {
             progressBar.setVisibility(View.GONE);
             tvLoad.setText(mContext.getString(R.string.reload));
         }
     }
 
 
-    public void footShowClickText(){
+    public void footShowClickText() {
         mFootViewHolder.showClickText();
     }
 
-    public void footShowProgress(){
+    public void footShowProgress() {
         mFootViewHolder.showProgress();
     }
 
-    public void setFootClickable(boolean clickable){
+    public void setFootClickable(boolean clickable) {
         mFootViewHolder.setClickable(clickable);
     }
-    public interface FootViewListener{
-        void onClick();
+
+    public interface ItemClickListener {
+        void itemClick(DataEntities dataEntitie);
+
+        void footViewClick();
     }
+
 }

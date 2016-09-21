@@ -18,6 +18,8 @@ public interface DataModel {
         void requestSuccess(List<DataEntities> dataEntitiesList);
 
         void requestFail(boolean hasLocalData, Throwable e);
+
+        void onCompleted();
     }
 
     /**
