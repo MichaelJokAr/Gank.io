@@ -22,6 +22,7 @@ import org.jokar.gankio.widget.RelativeTimeTextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -168,6 +169,14 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
 
     public void setOnItemClickListener(ItemClickListener listener) {
         mClickListener = listener;
+    }
+
+    public List<DataEntities> getData(){
+        return mSearchEntitiesList;
+    }
+
+    public void setData(List<DataEntities> data){
+        this.mSearchEntitiesList = new ArrayList<>(data);
     }
 
     class ViewHolder extends GankViewHolder {

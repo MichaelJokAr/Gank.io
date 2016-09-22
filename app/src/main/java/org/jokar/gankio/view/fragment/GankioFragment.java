@@ -3,6 +3,7 @@ package org.jokar.gankio.view.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import org.jokar.gankio.model.entities.DataEntities;
 import org.jokar.gankio.model.rxbus.RxBus;
 import org.jokar.gankio.model.rxbus.event.MainViewPagerEvent;
 import org.jokar.gankio.presenter.impl.DataPresenterImpl;
+import org.jokar.gankio.utils.DataEntitieDiffCallback;
 import org.jokar.gankio.utils.JToast;
 import org.jokar.gankio.view.activity.GankActivity;
 import org.jokar.gankio.view.adapter.GankioFragmentAdapter;
@@ -191,8 +193,15 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
     @Override
     public void loadMore(List<DataEntities> dataEntitiesList) {
         mDataEntitiesList.addAll(dataEntitiesList);
-        mAdapter.notifyDataSetChanged();
+
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff
+                (new DataEntitieDiffCallback(mAdapter.getData(), mDataEntitiesList), true);
+
+        mAdapter.setData(mDataEntitiesList);
+        diffResult.dispatchUpdatesTo(mAdapter);
+
         recyclerView.scrollToPosition(mAdapter.getItemCount() - count);
+
     }
 
     @Override
@@ -208,11 +217,11 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
         mAdapter.setOnItemClickListener(new GankioFragmentAdapter.ItemClickListener() {
             @Override
             public void itemClick(DataEntities dataEntities) {
-                if(dataEntities.getType().equals("福利")){
+                if (dataEntities.getType().equals("福利")) {
 
-                }else {
+                } else {
                     Intent intent = new Intent(getActivity(), GankActivity.class);
-                    intent.putExtra("dataEntities",dataEntities);
+                    intent.putExtra("dataEntities", dataEntities);
                     startActivity(intent);
                 }
             }

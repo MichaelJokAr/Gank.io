@@ -16,6 +16,11 @@ android {
         jackOptions {
             enabled true
         }
+
+        ndk {
+            // 设置支持的SO库架构
+            abiFilters 'armeabi' , 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
     }
 
     signingConfigs {
@@ -84,12 +89,12 @@ dependencies {
     //json -google
     compile 'com.google.code.gson:gson:latest.release'
     //PhotoView
-    compile 'com.commit451:PhotoView:latest.release'
+    compile 'com.github.chrisbanes:PhotoView:latest.release'
     //dagger2
     annotationProcessor 'com.google.dagger:dagger-compiler:latest.release'
     compile 'com.google.dagger:dagger:latest.release'
     provided 'org.glassfish:javax.annotation:10.0-b28'
-    compile 'com.android.support:recyclerview-v7:24.2.1'
-    compile 'com.android.support:support-v4:24.2.1'
-    compile 'com.android.support:gridlayout-v7:24.2.1'
+    //bugly
+    compile 'com.tencent.bugly:crashreport:latest.release'
+    compile 'com.tencent.bugly:nativecrashreport:latest.release'
 }
