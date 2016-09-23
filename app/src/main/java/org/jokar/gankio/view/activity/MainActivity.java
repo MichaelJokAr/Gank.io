@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
@@ -72,6 +74,25 @@ public class MainActivity extends BaseActivity {
         viewPager.setAdapter(mPagerAdapter);
         viewPager.setOffscreenPageLimit(viewPageOffscreenCount.size());
 
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (fab.getVisibility() != View.VISIBLE) {
+                    //判断fab是否已隐藏,若隐藏则让其显示
+                    animateIn(fab);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         RxBus.getBus().toMainThreadObserverable(bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(event -> {
                     //设置viewpager缓存
@@ -160,6 +181,17 @@ public class MainActivity extends BaseActivity {
             viewPager.setOffscreenPageLimit(viewPageOffscreenCount.size());
 
         }
+    }
+
+    private void animateIn(FloatingActionButton fab) {
+
+        fab.setVisibility(View.VISIBLE);
+        ViewCompat.animate(fab)
+                .translationY(0)
+                .setInterpolator(new FastOutSlowInInterpolator())
+                .withLayer()
+                .setListener(null)
+                .start();
     }
 
     private void initToolbar() {
