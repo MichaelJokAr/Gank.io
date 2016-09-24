@@ -10,6 +10,9 @@ import org.jokar.gankio.view.ui.AddGankView;
 
 import javax.inject.Inject;
 
+import rx.Observable;
+import rx.Subscriber;
+
 /**
  * Created by JokAr on 2016/9/23.
  */
@@ -28,54 +31,75 @@ public class AddGankPresenterImpl implements AddGankPresenter {
     @Override
     public void submit(LifecycleTransformer lifecycleTransformer,
                        String url, String desc, String who, String type, boolean debug) {
-       //检查类型
-        if (TextUtils.isEmpty(type)) {
-            mAddGankView.showTypeEmtyError();
-            return;
-        }
-        //检查描述
-        if (TextUtils.isEmpty(desc)) {
-            mAddGankView.showDescEmtyError("对干货的内容描述不能为空");
-            return;
-        } else if (desc.length() < 5) {
-            mAddGankView.showDescEmtyError("对干货的内容描述至少得5个字");
-            return;
-        }
-        //检查url
-        if (TextUtils.isEmpty(url)) {
-            mAddGankView.showUrlEmtyError();
-            return;
-        }
-        //检查id
-        if (TextUtils.isEmpty(who)) {
-            mAddGankView.showWhoEmtyError();
-            return;
-        }
 
-
-
-        mAddGankModel.addGank(lifecycleTransformer, url, desc, who, type, debug,
-                new AddGankModel.AddGankCallBack() {
-                    @Override
-                    public void onStart() {
-                        mAddGankView.showSubmitProgress();
+        Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(Subscriber<? super Boolean> subscriber) {
+                subscriber.onNext(debug);
+            }
+        })
+                .filter(aBoolean -> {
+                    //检查类型
+                    if (TextUtils.isEmpty(type)) {
+                        mAddGankView.showTypeEmtyError();
+                        return false;
                     }
-
-                    @Override
-                    public void success(String msg) {
-                        mAddGankView.showSubmitSuccess(msg);
+                    return true;
+                })
+                .filter(aBoolean -> {
+                    //检查描述
+                    if (TextUtils.isEmpty(desc)) {
+                        mAddGankView.showDescEmtyError("对干货的内容描述不能为空");
+                        return false;
+                    } else if (desc.length() < 5) {
+                        mAddGankView.showDescEmtyError("对干货的内容描述至少得5个字");
+                        return false;
                     }
-
-                    @Override
-                    public void fail(Throwable e) {
-                        mAddGankView.compeleteSubmitProgress();
-                        mAddGankView.showSubmiError(e);
+                    return true;
+                })
+                .filter(aBoolean -> {
+                    //检查url
+                    if (TextUtils.isEmpty(url)) {
+                        mAddGankView.showUrlEmtyError();
+                        return false;
                     }
-
-                    @Override
-                    public void compelete() {
-                        mAddGankView.compeleteSubmitProgress();
+                    return true;
+                })
+                .filter(aBoolean -> {
+                    //检查id
+                    if (TextUtils.isEmpty(who)) {
+                        mAddGankView.showWhoEmtyError();
+                        return false;
                     }
+                    return true;
+                })
+                .subscribe(aBoolean -> {
+
+                    mAddGankModel.addGank(lifecycleTransformer, url, desc, who, type, debug,
+                            new AddGankModel.AddGankCallBack() {
+                                @Override
+                                public void onStart() {
+                                    mAddGankView.showSubmitProgress();
+                                }
+
+                                @Override
+                                public void success(String msg) {
+                                    mAddGankView.showSubmitSuccess(msg);
+                                }
+
+                                @Override
+                                public void fail(Throwable e) {
+                                    mAddGankView.compeleteSubmitProgress();
+                                    mAddGankView.showSubmiError(e);
+                                }
+
+                                @Override
+                                public void compelete() {
+                                    mAddGankView.compeleteSubmitProgress();
+                                }
+                            });
                 });
+
+
     }
 }

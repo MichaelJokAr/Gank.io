@@ -50,7 +50,7 @@ public class DataModelImpl implements DataModel {
     public void request(String type, int count, int pageSize, final DataDB dataDB,
                         @NonNull LifecycleTransformer lifecycleTransformer,
                         @NonNull final DataCallBack callBack) {
-
+        checkNotNull(lifecycleTransformer);
         checkNotNull(callBack);
         final List<DataEntities> loaclEntities;
         if (type.equals("all")) {
@@ -102,6 +102,7 @@ public class DataModelImpl implements DataModel {
                         LifecycleTransformer lifecycleTransformer,
                         DataCallBack callBack) {
         checkNotNull(callBack);
+        checkNotNull(lifecycleTransformer);
 
         callBack.start(false, null);
 

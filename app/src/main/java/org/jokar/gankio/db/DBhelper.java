@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DBhelper extends SQLiteOpenHelper {
     private static final String name = "gankio";
-    private static final int version = 2;
+    private static final int version = 3;
     private static volatile DBhelper instance;
 
     public DBhelper(Context context) {
@@ -38,18 +38,32 @@ public class DBhelper extends SQLiteOpenHelper {
             + DataDB.rowUsed + " INTEGER, "
             + DataDB.rowWho + " TEXT);";
 
+    private final String DAILYGANKTABLE = "CREATE TABLE "
+            + DailyGankDB.tableName + " ( "
+            + DailyGankDB.row_id + " TEXT NOT NULL PRIMARY KEY, "
+            + DailyGankDB.rowCreatedAt + " TEXT, "
+            + DailyGankDB.rowDesc + " TEXT, "
+            + DailyGankDB.rowPublishedAt + " TEXT, "
+            + DailyGankDB.rowSource + " TEXT, "
+            + DailyGankDB.rowType + " TEXT, "
+            + DailyGankDB.rowUrl + " TEXT, "
+            + DailyGankDB.rowUsed + " INTEGER, "
+            + DailyGankDB.rowWho + " TEXT, "
+            + DailyGankDB.rowDay + " TEXT NOT NULL );";
+
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
         sqLiteDatabase.execSQL(SEARCHTABLE);
         sqLiteDatabase.execSQL(DATATABLE);
+        sqLiteDatabase.execSQL(DAILYGANKTABLE);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase,  int oldVersion, int newVersion) {
-        if(newVersion == 2){
-            sqLiteDatabase.execSQL(DATATABLE);
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        if (newVersion == 3) {
+            sqLiteDatabase.execSQL(DAILYGANKTABLE);
         }
     }
 

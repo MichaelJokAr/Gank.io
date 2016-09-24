@@ -56,6 +56,7 @@ public class SplashViewModelImpl implements SplashViewModel {
                          LifecycleTransformer lifecycleTransformer,
                          @NonNull final SplashLoadCallback callback) {
         checkNotNull(callback);
+        checkNotNull(lifecycleTransformer);
 
         mSplashService.getImage()
                 .compose(lifecycleTransformer)
