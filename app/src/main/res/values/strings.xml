@@ -9,4 +9,5 @@
 	<string name="openUrl">Open the browser</string>
 	<string name="copyUrl">Copy Url</string>
 	<string name="transition_name_addGank">transition_name_addGank</string>
+	<string name="transition_name_image">transition_name_image</string>
 </resources>

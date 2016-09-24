@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jakewharton.rxbinding.view.RxView;
 
 import org.jokar.gankio.R;
@@ -100,7 +101,7 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
                 //设置点击事件
                 RxView.clicks(imageViewHolder.ll_continear).subscribe(aVoid -> {
                     if (mClickListener != null) {
-                        mClickListener.itemClick(entities);
+                        mClickListener.imageItemClick(entities,imageViewHolder.image);
                     }
                 });
                 break;
@@ -211,6 +212,7 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
                     .load(url)
                     .placeholder(R.mipmap.default_image)
                     .error(R.mipmap.default_image)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(image);
         }
     }
@@ -294,6 +296,8 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
         void itemClick(DataEntities dataEntitie);
 
         void footViewClick();
+
+        void imageItemClick(DataEntities dataEntitie,ImageView imageView);
     }
 
 }

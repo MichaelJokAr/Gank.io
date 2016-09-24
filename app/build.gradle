@@ -89,7 +89,7 @@ dependencies {
     //json -google
     compile 'com.google.code.gson:gson:latest.release'
     //PhotoView
-    compile 'com.github.chrisbanes:PhotoView:latest.release'
+    compile 'com.commit451:PhotoView:latest.release'
     //dagger2
     annotationProcessor 'com.google.dagger:dagger-compiler:latest.release'
     compile 'com.google.dagger:dagger:latest.release'
@@ -97,4 +97,5 @@ dependencies {
     //bugly
     compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
+    
 }

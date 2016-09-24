@@ -13,6 +13,8 @@
 		<item name="android:windowIsTranslucent">true</item>
 	</style>
 
+	<style name="ImageTheme" parent="AppTheme"/>
+
 	<style name="AddGankTheme" parent="Theme.AppCompat.Light.NoActionBar">
 		<!-- Customize your theme here. -->
 		<item name="colorPrimary">@color/colorPrimary</item>

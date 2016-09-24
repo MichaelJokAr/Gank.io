@@ -1,7 +1,9 @@
 package org.jokar.gankio.view.fragment;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.trello.rxlifecycle.android.FragmentEvent;
 
@@ -27,6 +30,7 @@ import org.jokar.gankio.presenter.impl.DataPresenterImpl;
 import org.jokar.gankio.utils.DataEntitieDiffCallback;
 import org.jokar.gankio.utils.JToast;
 import org.jokar.gankio.view.activity.GankActivity;
+import org.jokar.gankio.view.activity.GankImageActivity;
 import org.jokar.gankio.view.adapter.GankioFragmentAdapter;
 import org.jokar.gankio.view.ui.FragmentView;
 import org.jokar.gankio.widget.ErrorView;
@@ -217,13 +221,11 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
         mAdapter.setOnItemClickListener(new GankioFragmentAdapter.ItemClickListener() {
             @Override
             public void itemClick(DataEntities dataEntities) {
-                if (dataEntities.getType().equals("福利")) {
 
-                } else {
-                    Intent intent = new Intent(getActivity(), GankActivity.class);
-                    intent.putExtra("dataEntities", dataEntities);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(getActivity(), GankActivity.class);
+                intent.putExtra("dataEntities", dataEntities);
+                startActivity(intent);
+
             }
 
             @Override
@@ -232,6 +234,23 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
                 pageSize++;
                 mPresenter.loadMore(mDataDB, type, count, pageSize,
                         bindUntilEvent(FragmentEvent.STOP));
+            }
+
+            @Override
+            public void imageItemClick(DataEntities dataEntitie, ImageView imageView) {
+                Intent intent = new Intent(getActivity(), GankImageActivity.class);
+                ActivityOptionsCompat mActivityOptionsCompat;
+                intent.putExtra("dataEntities", dataEntitie);
+                if (Build.VERSION.SDK_INT >= 21) {
+                    mActivityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            getActivity(), imageView, getString(R.string.transition_name_image));
+                } else {
+                    mActivityOptionsCompat = ActivityOptionsCompat.makeScaleUpAnimation(
+                            imageView, 0, 0,
+                            imageView.getWidth(),
+                            imageView.getHeight());
+                }
+                startActivity(intent, mActivityOptionsCompat.toBundle());
             }
         });
     }

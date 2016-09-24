@@ -3,10 +3,13 @@
           package="org.jokar.gankio">
 
 	<uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	<uses-permission android:name="android.permission.READ_LOGS" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+	<uses-permission android:name="android.permission.READ_LOGS"/>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
 	<application
 		android:name=".app.GankioApplication"
 		android:allowBackup="true"
@@ -29,9 +32,15 @@
 		<activity android:name=".view.activity.GankActivity"/>
 		<activity
 			android:name=".view.activity.AddGankActivity"
-			android:windowSoftInputMode="stateHidden|adjustResize"
-			android:theme="@style/AddGankTheme"/>
+			android:theme="@style/AddGankTheme"
+			android:windowSoftInputMode="stateHidden|adjustResize"/>
 
+		<activity
+			android:name=".view.activity.GankImageActivity"
+			android:theme="@style/ImageTheme"/>
+
+		<service android:name=".view.listener.DownloadIntentService"
+			android:enabled="true"/>
 		<meta-data
 			android:name="org.jokar.gankio.app.GlideModuleSetting"
 			android:value="GlideModule"/>

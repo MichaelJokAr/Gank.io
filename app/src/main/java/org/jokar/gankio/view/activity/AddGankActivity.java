@@ -2,7 +2,6 @@ package org.jokar.gankio.view.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -16,11 +15,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.trello.rxlifecycle.android.ActivityEvent;
 
+import org.jokar.gankio.BuildConfig;
 import org.jokar.gankio.R;
 import org.jokar.gankio.di.component.preseneter.DaggerAddGanPresneterCom;
 import org.jokar.gankio.di.module.models.AddGankModelModule;
@@ -87,9 +86,18 @@ public class AddGankActivity extends BaseActivity implements AddGankView {
                 .build()
                 .inject(this);
         //绑定输入view事件
-        RxTextView.textChanges(edDesc).subscribe(charSequence -> layoutDesc.setErrorEnabled(false));
-        RxTextView.textChanges(edUrl).subscribe(charSequence -> layoutUrl.setErrorEnabled(false));
-        RxTextView.textChanges(edWho).subscribe(charSequence -> layoutWho.setErrorEnabled(false));
+        RxTextView.textChanges(edDesc).subscribe(charSequence -> {
+            layoutDesc.setErrorEnabled(false);
+            layoutDesc.setHintEnabled(true);
+        });
+        RxTextView.textChanges(edUrl).subscribe(charSequence -> {
+            layoutUrl.setErrorEnabled(false);
+            layoutUrl.setHintEnabled(true);
+        });
+        RxTextView.textChanges(edWho).subscribe(charSequence -> {
+            layoutWho.setErrorEnabled(false);
+            layoutWho.setHintEnabled(true);
+        });
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("正在提交,请稍等...");
@@ -144,21 +152,24 @@ public class AddGankActivity extends BaseActivity implements AddGankView {
         }
         mAddGankPresenter.submit(bindUntilEvent(ActivityEvent.STOP),
                 edUrl.getText().toString(), edDesc.getText().toString(),
-                edWho.getText().toString(), type, true);
+                edWho.getText().toString(), type, BuildConfig.DEBUG);
     }
 
     @Override
     public void showDescEmtyError(String error) {
+        layoutDesc.setHintEnabled(false);
         layoutDesc.setError(error);
     }
 
     @Override
     public void showUrlEmtyError() {
+        layoutUrl.setHintEnabled(false);
         layoutUrl.setError("网页地址不能为空");
     }
 
     @Override
     public void showWhoEmtyError() {
+        layoutWho.setHintEnabled(false);
         layoutWho.setError("提交者ID不能为空");
     }
 
@@ -170,14 +181,14 @@ public class AddGankActivity extends BaseActivity implements AddGankView {
 
     @Override
     public void showSubmitProgress() {
-        if(mProgressDialog!=null){
+        if (mProgressDialog != null) {
             mProgressDialog.show();
         }
     }
 
     @Override
     public void compeleteSubmitProgress() {
-        if(mProgressDialog!=null){
+        if (mProgressDialog != null) {
             mProgressDialog.dismiss();
         }
     }
@@ -189,12 +200,12 @@ public class AddGankActivity extends BaseActivity implements AddGankView {
         edDesc.setText("");
         edUrl.setText("");
         edWho.setText("");
-        Snackbar.make(coordinator,msg,Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(coordinator, msg, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void showSubmiError(Throwable e) {
-        Snackbar.make(coordinator,e.getMessage(),Snackbar.LENGTH_LONG).show();
+        Snackbar.make(coordinator, e.getMessage(), Snackbar.LENGTH_LONG).show();
     }
 
     /**
