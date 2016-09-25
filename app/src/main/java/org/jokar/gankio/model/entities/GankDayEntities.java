@@ -199,6 +199,31 @@ public class GankDayEntities {
     }
 
     public List<DataEntities> getDataEntitiesList() {
+        if (mDataEntitiesList.size() == 0) {
+            addDataEntitiesList();
+        }
         return mDataEntitiesList;
+    }
+
+    private void addDataEntitiesList() {
+        if (hasAndroid()) {
+            mDataEntitiesList.addAll(Android);
+        }
+
+        if (hasIOS()) {
+            mDataEntitiesList.addAll(iOS);
+        }
+
+        if (hasExpandRes()) {
+            mDataEntitiesList.addAll(ExpandRes);
+        }
+
+        if (hasRecommended()) {
+            mDataEntitiesList.addAll(Recommended);
+        }
+
+        if (hasVideoRest()) {
+            mDataEntitiesList.addAll(VideoRest);
+        }
     }
 }

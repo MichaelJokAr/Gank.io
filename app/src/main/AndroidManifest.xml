@@ -29,7 +29,9 @@
 
 		<activity android:name=".view.activity.MainActivity"/>
 
-		<activity android:name=".view.activity.GankActivity"/>
+		<activity android:name=".view.activity.GankActivity"
+			android:theme="@style/SplahsTheme"
+			android:process=":webview"/>
 		<activity
 			android:name=".view.activity.AddGankActivity"
 			android:theme="@style/AddGankTheme"
@@ -41,6 +43,7 @@
 
 		<activity android:name=".view.activity.DailyGankActivity"/>
 
+		<activity android:name=".view.activity.SettingActivity"/>
 		<service
 			android:name=".view.listener.DownloadIntentService"
 			android:enabled="true"/>

@@ -79,7 +79,6 @@ public class DailyGankAdapter extends RecyclerView.Adapter<DailyGankAdapter.Dail
     }
 
 
-
     public void setListener(ItemClickListener listener) {
         mListener = listener;
     }
@@ -91,19 +90,40 @@ public class DailyGankAdapter extends RecyclerView.Adapter<DailyGankAdapter.Dail
         } else if (position > titleIndex.get(titleIndex.size() - 1)) {
             return position - titleIndex.size();
         } else {
-            for (int i = 0; i < titleIndex.size(); i++) {
-                if (position < titleIndex.get(i)) {
-                    return position - i;
-                }
-            }
+
+            return position - binarySearch(titleIndex, position, 0, titleIndex.size() - 1);
         }
-        return position;
+    }
+
+    /**
+     * 二分递归查找
+     *
+     * @param dataset
+     * @param data
+     * @param beginIndex
+     * @param endIndex
+     * @return  返回data在集合里最接近的大数小标
+     */
+    private int binarySearch(List<Integer> dataset, int data,
+                                   int beginIndex, int endIndex) {
+
+        int midIndex = (beginIndex + endIndex) / 2;
+
+        if (data < dataset.get(midIndex)) {
+            if (data > dataset.get(midIndex - 1))
+                return midIndex;
+            return binarySearch(dataset, data, beginIndex, midIndex - 1);
+        } else if (data > dataset.get(midIndex)) {
+            return binarySearch(dataset, data, midIndex + 1, endIndex);
+        } else {
+            return midIndex;
+        }
     }
 
     @Override
     public int getItemViewType(int position) {
         List<Integer> titleIndex = mGankDayEntities.getTitleIndex();
-//        JLog.d(titleIndex.toString());
+
         if (titleIndex.contains(position)) {
 
             return 0;

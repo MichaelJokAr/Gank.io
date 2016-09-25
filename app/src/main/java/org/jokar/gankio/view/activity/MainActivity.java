@@ -245,6 +245,11 @@ public class MainActivity extends BaseActivity implements MainView {
                 startActivity(intent);
                 break;
             }
+            case R.id.setting:{
+                Intent intent =new Intent(this,SettingActivity.class);
+                startActivity(intent);
+                break;
+            }
         }
         return super.onOptionsItemSelected(item);
     }
