@@ -8,6 +8,7 @@ import org.jokar.gankio.di.component.network.DaggerDailyGankComponent;
 import org.jokar.gankio.di.module.network.DailyGankModule;
 import org.jokar.gankio.model.entities.GankDayEntities;
 import org.jokar.gankio.model.event.DailyGankModel;
+import org.jokar.gankio.model.network.exception.DataException;
 import org.jokar.gankio.model.network.result.HttpResultFunc;
 import org.jokar.gankio.model.network.services.DailyGankService;
 import org.jokar.gankio.utils.JLog;
@@ -19,6 +20,7 @@ import retrofit2.Retrofit;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 
 
 import static org.jokar.gankio.utils.Preconditions.checkNotNull;
@@ -54,7 +56,7 @@ public class DailyGankModelImpl implements DailyGankModel {
         checkNotNull(dailyGankDB);
 
         callback.start();
-        String Day = year + month + day;
+        String Day = year + "-" + month + "-" + day;
 
         Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override
@@ -79,6 +81,16 @@ public class DailyGankModelImpl implements DailyGankModel {
                             .compose(lifecycleTransformer)
                             .compose(Schedulers.applySchedulersIO())
                             .map(new HttpResultFunc<GankDayEntities>())
+                            .map(new Func1<GankDayEntities, GankDayEntities>() {
+                                @Override
+                                public GankDayEntities call(GankDayEntities gankDayEntities) {
+                                    if (gankDayEntities.isNull()) {
+                                        throw new DataException("今日暂无干货!");
+                                    }
+                                    return gankDayEntities;
+                                }
+
+                            })
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Subscriber<GankDayEntities>() {
                                 @Override
@@ -94,7 +106,7 @@ public class DailyGankModelImpl implements DailyGankModel {
 
                                 @Override
                                 public void onNext(GankDayEntities gankDayEntities) {
-                                    gankDayEntities.setDay(day);
+                                    gankDayEntities.setDay(Day);
                                     dailyGankDB.insert(gankDayEntities);
                                     callback.requestSuccess(gankDayEntities);
                                 }

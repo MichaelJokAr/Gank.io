@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
-		android:id="@+id/about"
-		android:title="关于"/>
+		android:id="@+id/setting"
+		android:title="设置"/>
 	<item
-		android:id="@+id/today"
-		android:title="今日推荐"/>
+		android:id="@+id/dailyGank"
+		android:title="今日干货"/>
 </menu>

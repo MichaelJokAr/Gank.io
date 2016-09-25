@@ -9,4 +9,6 @@
 	<color name="error_view_retry_button_background">#30000000</color>
 	<color name="error_view_retry_button_background_stroke">#50000000</color>
 	<color name="line_bg">#e6e6e6</color>
+	<color name="md_grey_900">#212121</color>
+	<color name="md_amber_100">#ffecb3</color>
 </resources>

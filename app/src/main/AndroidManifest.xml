@@ -8,7 +8,7 @@
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 	<uses-permission android:name="android.permission.READ_LOGS"/>
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
 	<application
 		android:name=".app.GankioApplication"
@@ -39,7 +39,10 @@
 			android:name=".view.activity.GankImageActivity"
 			android:theme="@style/ImageTheme"/>
 
-		<service android:name=".view.listener.DownloadIntentService"
+		<activity android:name=".view.activity.DailyGankActivity"/>
+
+		<service
+			android:name=".view.listener.DownloadIntentService"
 			android:enabled="true"/>
 		<meta-data
 			android:name="org.jokar.gankio.app.GlideModuleSetting"

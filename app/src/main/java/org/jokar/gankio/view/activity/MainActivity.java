@@ -1,36 +1,46 @@
 package org.jokar.gankio.view.activity;
 
-import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.trello.rxlifecycle.android.ActivityEvent;
 
 import org.jokar.gankio.R;
+import org.jokar.gankio.db.DailyGankDB;
+import org.jokar.gankio.di.component.db.DaggerDailyGankDBCom;
+import org.jokar.gankio.di.component.db.DailyGankDBCom;
+import org.jokar.gankio.di.component.preseneter.DaggerMainPresenterCom;
+import org.jokar.gankio.di.module.db.DailyGankDBModule;
+import org.jokar.gankio.di.module.models.DailyGankModelModule;
+import org.jokar.gankio.di.module.view.MainViewModule;
 import org.jokar.gankio.model.rxbus.RxBus;
 import org.jokar.gankio.model.rxbus.event.MainViewPagerEvent;
+import org.jokar.gankio.presenter.impl.MainPresenterImpl;
 import org.jokar.gankio.view.adapter.FragmentAdapter;
 import org.jokar.gankio.view.fragment.GankioFragment;
+import org.jokar.gankio.view.ui.MainView;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements MainView {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -40,10 +50,15 @@ public class MainActivity extends BaseActivity {
     ViewPager viewPager;
     @BindView(R.id.fab)
     FloatingActionButton fab;
+    @BindView(R.id.coordinator)
+    CoordinatorLayout coordinator;
 
+    @Inject
+    DailyGankDB mDailyGankDB;
+    @Inject
+    MainPresenterImpl mMainPresenter;
 
     private FragmentAdapter mPagerAdapter;
-    private ArrayList<Fragment> mFragments;
     // all | Android | iOS | 休息视频 | 福利 | 拓展资源 | 前端 | 瞎推荐 | App
 //    private List<String> types = Arrays.asList("all", "Android", "iOS", "休息视频", "福利", "拓展资源", "前端", "瞎推荐", "App");
 
@@ -61,7 +76,18 @@ public class MainActivity extends BaseActivity {
     }
 
     private void init() {
-        mFragments = new ArrayList<>();
+        //初始化
+        DailyGankDBCom gankDBCom = DaggerDailyGankDBCom.builder()
+                .dailyGankDBModule(new DailyGankDBModule(this))
+                .build();
+
+        DaggerMainPresenterCom.builder()
+                .dailyGankDBCom(gankDBCom)
+                .mainViewModule(new MainViewModule(this))
+                .dailyGankModelModule(new DailyGankModelModule())
+                .build()
+                .inject(this);
+
         viewPageOffscreenCount = new ArrayList<>();
         viewPageOffscreenCount.add("All");
         mPagerAdapter = new FragmentAdapter(getSupportFragmentManager());
@@ -98,6 +124,10 @@ public class MainActivity extends BaseActivity {
                     //设置viewpager缓存
                     setOffscreenPageLimit((MainViewPagerEvent) event);
                 });
+
+        //请求获取今日干货
+        mMainPresenter.requestDailyGank(System.currentTimeMillis(),
+                mDailyGankDB, bindUntilEvent(ActivityEvent.STOP));
     }
 
     /**
@@ -207,9 +237,30 @@ public class MainActivity extends BaseActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.dailyGank:{
+                Intent intent = new Intent(this, DailyGankActivity.class);
+                startActivity(intent);
+                break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @OnClick(R.id.fab)
     public void addGank(View view) {
         Intent intent = new Intent(this, AddGankActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void showDailyGank() {
+        Snackbar.make(coordinator, "今日干货到啦!", Snackbar.LENGTH_LONG)
+                .setAction("去看看", v -> {
+                    Intent intent = new Intent(this, DailyGankActivity.class);
+                    startActivity(intent);
+                }).show();
     }
 }

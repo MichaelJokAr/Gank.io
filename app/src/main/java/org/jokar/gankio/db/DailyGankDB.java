@@ -11,6 +11,8 @@ import org.jokar.gankio.model.entities.GankDayEntities;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import rx.Observable;
 
 /**
@@ -31,6 +33,7 @@ public class DailyGankDB {
 
     private DBhelper helper;
 
+    @Inject
     public DailyGankDB(Context context) {
         helper = DBhelper.getIntance(context);
     }
@@ -127,6 +130,13 @@ public class DailyGankDB {
 
             if (hasDailyGank(day)) {
                 gankDayEntities = new GankDayEntities();
+
+                //福利
+                List<DataEntities> Welfare = queryType(day, "福利", db);
+                if (Welfare != null && Welfare.size() > 0) {
+                    gankDayEntities.setWelfare(Welfare);
+                }
+
                 //android
                 List<DataEntities> android = queryType(day, "Android", db);
                 if (android != null && android.size() > 0) {
@@ -137,11 +147,7 @@ public class DailyGankDB {
                 if (ios != null && ios.size() > 0) {
                     gankDayEntities.setiOS(ios);
                 }
-                //休息视频
-                List<DataEntities> VideoRest = queryType(day, "休息视频", db);
-                if (VideoRest != null && VideoRest.size() > 0) {
-                    gankDayEntities.setVideoRest(VideoRest);
-                }
+
                 //拓展资源
                 List<DataEntities> ExpandRes = queryType(day, "拓展资源", db);
                 if (ExpandRes != null && ExpandRes.size() > 0) {
@@ -152,10 +158,11 @@ public class DailyGankDB {
                 if (Recommended != null && Recommended.size() > 0) {
                     gankDayEntities.setRecommended(Recommended);
                 }
-                //福利
-                List<DataEntities> Welfare = queryType(day, "瞎推荐", db);
-                if (Welfare != null && Welfare.size() > 0) {
-                    gankDayEntities.setWelfare(Welfare);
+
+                //休息视频
+                List<DataEntities> VideoRest = queryType(day, "休息视频", db);
+                if (VideoRest != null && VideoRest.size() > 0) {
+                    gankDayEntities.setVideoRest(VideoRest);
                 }
                 gankDayEntities.setDay(day);
             }
