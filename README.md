@@ -5,6 +5,7 @@ a client for <a href="http://gank.io/">gank.io</a> with use dagger2+MVP+Rxjava</
 项目采用dagger2+MVP模式编写
 
 ##Points
+- MVP
 - dagger2
 - rxjava,rxAndroid,rxlife,rxbinding,rxbus
 - retrofit,okhhtp
