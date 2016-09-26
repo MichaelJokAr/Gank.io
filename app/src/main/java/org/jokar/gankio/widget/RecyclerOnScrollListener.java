@@ -1,7 +1,8 @@
 package org.jokar.gankio.widget;
 
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
+import org.jokar.gankio.utils.RecyclerViewPositionHelper;
 
 /**
  * RecycleView上拉加载更多
@@ -17,11 +18,11 @@ public abstract class RecyclerOnScrollListener extends RecyclerView.OnScrollList
 
     private int currentPage = 1;
 
-    private LinearLayoutManager mLinearLayoutManager;
+    private RecyclerViewPositionHelper mHelper;
 
-    public RecyclerOnScrollListener(LinearLayoutManager linearLayoutManager) {
+    public RecyclerOnScrollListener(RecyclerView recyclerView) {
 
-        this.mLinearLayoutManager = linearLayoutManager;
+        mHelper = new RecyclerViewPositionHelper(recyclerView);
     }
 
     @Override
@@ -30,8 +31,8 @@ public abstract class RecyclerOnScrollListener extends RecyclerView.OnScrollList
         super.onScrolled(recyclerView, dx, dy);
 
         visibleItemCount = recyclerView.getChildCount();
-        totalItemCount = mLinearLayoutManager.getItemCount();
-        lastCompletelyVisiableItemPosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
+        totalItemCount = mHelper.getItemCount();
+        lastCompletelyVisiableItemPosition = mHelper.findLastCompletelyVisibleItemPosition();
 
         if (loading) {
             if (totalItemCount > previousTotal) {

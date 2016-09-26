@@ -19,6 +19,8 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:transitionName="@string/transition_name_image"
+		    android:scaleType="centerCrop"
+		    android:maxHeight="350dp"
 			/>
 
 		<LinearLayout

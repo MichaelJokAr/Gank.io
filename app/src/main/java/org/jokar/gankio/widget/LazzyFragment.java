@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 
 import com.trello.rxlifecycle.components.support.RxFragment;
 
+import org.jokar.gankio.utils.JLog;
+
 /**
  * Created by JokAr on 16/9/9.
  */
@@ -48,6 +50,7 @@ public abstract class LazzyFragment extends RxFragment {
         if (isVisibleToUser && isCreateView && !isLoadData) {
             loadData();
         }
+
     }
 
 

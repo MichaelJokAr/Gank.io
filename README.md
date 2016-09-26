@@ -6,7 +6,7 @@ a client for <a href="http://gank.io/">gank.io</a> with use dagger2+MVP+Rxjava</
 
 ##Points
 - dagger2
-- rxjava,rxAndroid,rxlife,rxbinding
+- rxjava,rxAndroid,rxlife,rxbinding,rxbus
 - retrofit,okhhtp
 - glide
 - gson

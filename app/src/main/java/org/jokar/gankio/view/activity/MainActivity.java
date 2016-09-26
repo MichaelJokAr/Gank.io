@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.ActivityEvent;
 
 import org.jokar.gankio.R;
@@ -26,6 +27,7 @@ import org.jokar.gankio.di.module.db.DailyGankDBModule;
 import org.jokar.gankio.di.module.models.DailyGankModelModule;
 import org.jokar.gankio.di.module.view.MainViewModule;
 import org.jokar.gankio.model.rxbus.RxBus;
+import org.jokar.gankio.model.rxbus.event.MainToolbarEvent;
 import org.jokar.gankio.model.rxbus.event.MainViewPagerEvent;
 import org.jokar.gankio.presenter.impl.MainPresenterImpl;
 import org.jokar.gankio.view.adapter.FragmentAdapter;
@@ -122,9 +124,13 @@ public class MainActivity extends BaseActivity implements MainView {
         RxBus.getBus().toMainThreadObserverable(bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(event -> {
                     //设置viewpager缓存
-                    setOffscreenPageLimit((MainViewPagerEvent) event);
+                    if (event instanceof MainViewPagerEvent)
+                        setOffscreenPageLimit((MainViewPagerEvent) event);
                 });
 
+        RxView.clicks(toolbar).subscribe(aVoid -> {
+            RxBus.getBus().send(new MainToolbarEvent());
+        });
         //请求获取今日干货
         mMainPresenter.requestDailyGank(System.currentTimeMillis(),
                 mDailyGankDB, bindUntilEvent(ActivityEvent.STOP));
@@ -239,14 +245,14 @@ public class MainActivity extends BaseActivity implements MainView {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.dailyGank:{
+        switch (item.getItemId()) {
+            case R.id.dailyGank: {
                 Intent intent = new Intent(this, DailyGankActivity.class);
                 startActivity(intent);
                 break;
             }
-            case R.id.setting:{
-                Intent intent =new Intent(this,SettingActivity.class);
+            case R.id.setting: {
+                Intent intent = new Intent(this, SettingActivity.class);
                 startActivity(intent);
                 break;
             }

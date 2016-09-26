@@ -9,6 +9,7 @@ import android.support.v7.util.DiffUtil;
 import android.support.v7.util.ListUpdateCallback;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import org.jokar.gankio.di.module.models.DataModelModule;
 import org.jokar.gankio.di.module.view.FragmentViewModule;
 import org.jokar.gankio.model.entities.DataEntities;
 import org.jokar.gankio.model.rxbus.RxBus;
+import org.jokar.gankio.model.rxbus.event.MainToolbarEvent;
 import org.jokar.gankio.model.rxbus.event.MainViewPagerEvent;
 import org.jokar.gankio.presenter.impl.DataPresenterImpl;
 import org.jokar.gankio.utils.DataEntitieDiffCallback;
@@ -37,6 +39,7 @@ import org.jokar.gankio.view.ui.FragmentView;
 import org.jokar.gankio.widget.ErrorView;
 import org.jokar.gankio.widget.LazzyFragment;
 import org.jokar.gankio.widget.RecyclerOnScrollListener;
+import org.jokar.gankio.widget.SpacesItemDecoration;
 
 import java.util.List;
 
@@ -44,6 +47,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.functions.Action1;
 
 /**
  * GanK.io
@@ -70,6 +74,8 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
 
     private List<DataEntities> mDataEntitiesList;
 
+    private boolean mIsVisibleToUser = false;
+
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
@@ -87,11 +93,15 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
     @Override
     public void initViews(View view) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(linearLayoutManager);
+        if (type.equals("福利")) {
+            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+
+        } else
+            recyclerView.setLayoutManager(linearLayoutManager);
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_light
                 , android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light);
 
-        recyclerView.addOnScrollListener(new RecyclerOnScrollListener(linearLayoutManager) {
+        recyclerView.addOnScrollListener(new RecyclerOnScrollListener(recyclerView) {
             @Override
             public void onLoadMore(int currentPage) {
                 mAdapter.setFootClickable(false);
@@ -110,6 +120,14 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
             mPresenter.refrsh(mDataDB, type, count, 1, bindUntilEvent(FragmentEvent.STOP));
         });
 
+        RxBus.getBus().toMainThreadObserverable(bindUntilEvent(FragmentEvent.STOP))
+                .subscribe(event -> {
+                    if (event instanceof MainToolbarEvent) {
+                        if (recyclerView != null && mIsVisibleToUser) {
+                            recyclerView.scrollToPosition(0);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -181,8 +199,16 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
             recyclerView.setVisibility(View.VISIBLE);
         }
         mDataEntitiesList = searchEntities;
-        mAdapter = new GankioFragmentAdapter(getContext(), type, mDataEntitiesList);
-        recyclerView.setAdapter(mAdapter);
+        if (mAdapter == null) {
+            mAdapter = new GankioFragmentAdapter(getContext(), type, mDataEntitiesList);
+            recyclerView.setAdapter(mAdapter);
+        } else {
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
+                    new DataEntitieDiffCallback(mAdapter.getData(), mDataEntitiesList));
+
+            mAdapter.setData(mDataEntitiesList);
+            diffResult.dispatchUpdatesTo(mAdapter);
+        }
         setAdapterClick();
     }
 
@@ -254,5 +280,11 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
                 startActivity(intent, mActivityOptionsCompat.toBundle());
             }
         });
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        mIsVisibleToUser = isVisibleToUser;
     }
 }
