@@ -9,6 +9,7 @@ import org.jokar.gankio.presenter.event.DailyGankPresenter;
 import org.jokar.gankio.view.ui.MainView;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -36,8 +37,7 @@ public class MainPresenterImpl implements DailyGankPresenter {
     public void requestDailyGank(long time, DailyGankDB dailyGankDB,
                                  LifecycleTransformer lifecycleTransformer) {
 
-//        String day = formatter.format(new Date(time));
-        String day = "2016-09-23";
+        String day = formatter.format(new Date(time));
         String[] times = day.split("-");
         Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override

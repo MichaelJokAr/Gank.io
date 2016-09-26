@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/app_name">
+
+        <Preference
+            android:key="introduction"
+            android:summary="Gank.io客户端是用Dagger2+MVP+Rxjava 来实现的网站Gank.io的客户端"
+            android:title="应用介绍" />
+
+        <Preference
+            android:key="currentVersion"
+            android:summary="V1.0"
+            android:title="当前版本" />
+        <Preference
+            android:key="imageCache"
+            android:title="清除图片缓存"
+            android:summary="0M"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="关于作者">
+        <Preference
+            android:key="author"
+            android:summary="JokAr"
+            android:title="作者" />
+
+        <Preference
+            android:key="github"
+            android:summary="https://github.com/a1018875550"
+            android:title="Github" />
+	    <Preference
+		    android:key="csdn"
+            android:summary="http://blog.csdn.net/a1018875550"
+            android:title="CSDN"
+		    />
+    </PreferenceCategory>
+
+</PreferenceScreen>

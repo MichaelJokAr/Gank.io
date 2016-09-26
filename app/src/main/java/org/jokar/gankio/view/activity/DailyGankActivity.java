@@ -72,7 +72,7 @@ public class DailyGankActivity extends BaseActivity implements DailyGankView {
     }
 
     private void init() {
-        initToolbar(toolbar, "每日干货");
+        initToolbar(toolbar, "今日干货");
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         errorView.setOnRetryListener(() -> {
             mGankPresenter.requestDailyGank(System.currentTimeMillis(), mDailyGankDB,

@@ -32,8 +32,7 @@ public class DailyGankPresenterImpl implements DailyGankPresenter {
     @Override
     public void requestDailyGank(long time, DailyGankDB dailyGankDB,
                                  LifecycleTransformer lifecycleTransformer) {
-//          String day = formatter.format(new Date(time));
-        String day = "2016-09-23";
+        String day = formatter.format(new Date(time));
         String[] times = day.split("-");
         mDailyGankModel.request(lifecycleTransformer, dailyGankDB, times[0], times[1], times[2],
                 new DailyGankModel.DailyGankCallback() {

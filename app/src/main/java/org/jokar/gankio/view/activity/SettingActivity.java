@@ -7,8 +7,10 @@ import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 
 import org.jokar.gankio.R;
+import org.jokar.gankio.view.fragment.AboutFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,9 +23,8 @@ public class SettingActivity extends BaseActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.switchCompat)
-    SwitchCompat switchCompat;
-
+    @BindView(R.id.fragment)
+    FrameLayout fragment;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,16 +36,6 @@ public class SettingActivity extends BaseActivity {
 
     private void init() {
         initToolbar(toolbar,"设置");
-
-        switchCompat.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if(isChecked){
-                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                recreate();
-            }else {
-
-                getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                recreate();
-            }
-        });
+        getFragmentManager().beginTransaction().replace(R.id.fragment, new AboutFragment()).commit();
     }
 }

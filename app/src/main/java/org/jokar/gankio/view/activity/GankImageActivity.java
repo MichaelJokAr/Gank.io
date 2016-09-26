@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -18,8 +19,15 @@ import com.jakewharton.rxbinding.view.RxView;
 
 import org.jokar.gankio.R;
 import org.jokar.gankio.model.entities.DataEntities;
+import org.jokar.gankio.utils.JToast;
 import org.jokar.gankio.utils.NavigationbarUtil;
 import org.jokar.gankio.view.listener.DownloadIntentService;
+import org.jokar.permissiondispatcher.annotation.NeedsPermission;
+import org.jokar.permissiondispatcher.annotation.OnNeverAskAgain;
+import org.jokar.permissiondispatcher.annotation.OnPermissionDenied;
+import org.jokar.permissiondispatcher.annotation.OnShowRationale;
+import org.jokar.permissiondispatcher.annotation.RuntimePermissions;
+import org.jokar.permissiondispatcher.library.PermissionRequest;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +36,7 @@ import butterknife.ButterKnife;
  * 福利图片
  * Created by JokAr on 2016/9/24.
  */
+@RuntimePermissions
 public class GankImageActivity extends BaseActivity {
 
     @BindView(R.id.toolbar)
@@ -57,18 +66,9 @@ public class GankImageActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.download) {
-            download();
+            GankImageActivityPermissionsDispatcher.downloadWithCheck(this);
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * 下载文件
-     */
-    private void download() {
-        Intent intent = new Intent(this, DownloadIntentService.class);
-        intent.putExtra("url", mDataEntities.getUrl());
-        startService(intent);
     }
 
 
@@ -88,6 +88,42 @@ public class GankImageActivity extends BaseActivity {
 
         RxView.clicks(photoView).subscribe(aVoid -> hideBar());
 
+    }
+    /**
+     * 下载文件
+     */
+    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    public void download() {
+        Intent intent = new Intent(this, DownloadIntentService.class);
+        intent.putExtra("url", mDataEntities.getUrl());
+        startService(intent);
+    }
+
+    @OnShowRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    public void showRationaleForDownlaod(PermissionRequest request){
+        new AlertDialog.Builder(this)
+                .setTitle("请求权限")
+                .setMessage("是否允许Gank.io获得存储空间权限?")
+                .setPositiveButton("允许", (dialog, button) -> request.proceed())
+                .setNegativeButton("拒绝", (dialog, button) -> request.cancel())
+                .show();
+    }
+
+
+    @OnPermissionDenied(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    void showDeniedForCamera() {
+        JToast.Toast(this,"很抱歉,您需要允许GanK.io获得存储空间权限才能下载");
+    }
+
+    @OnNeverAskAgain(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    void showNeverAskForCamera() {
+        JToast.Toast(this,"很抱歉,您需要允许GanK.io获得存储空间权限才能下载,请到设置里配置权限");
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        GankImageActivityPermissionsDispatcher.onRequestPermissionsResult(this,requestCode,grantResults);
     }
 
     /**

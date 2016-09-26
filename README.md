@@ -1,9 +1,29 @@
 ##Gank.io
-a client for <a href="http://gank.io/">gank.io</a> with use dagger2+MVP+Rxjava
+a client for <a href="http://gank.io/">gank.io</a> with use dagger2+MVP+Rxjava</br>
+
+
+项目采用dagger2+MVP模式编写
+
+##Points
+- dagger2
+- rxjava,rxAndroid,rxlife,rxbinding
+- retrofit,okhhtp
+- glide
+- gson
+- butterknife
+- <a href="https://github.com/a1018875550/PermissionDispatcher">permissiondispatcher</a> (权限管理工具)
+
 
 ##Screenshot
-<img src="art/img1.jpg" width="225" height="410" />
-
+<body bgcolor="#f0f0f0">
+<p>
+&nbsp;&nbsp;&nbsp;<img src="art/img1.jpg" width="225" height="410" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="art/img2.jpg" width="225" height="410" />
+</p>
+<p bgcolor="#f0f0f0">
+&nbsp;&nbsp;&nbsp;<img src="art/img3.jpg" width="225" height="410" />
+</p>
+</body>
 ##Thanks
 感谢<a href="https://github.com/HotBitmapGG">@hcc</a>的 <a href="https://github.com/HotBitmapGG/AndroidRank">AndroidRank</a>项目,让我学习了很多东西
 ## Licence
