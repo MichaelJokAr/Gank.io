@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding.view.RxView;
+import com.trello.rxlifecycle.LifecycleTransformer;
 
 import org.jokar.gankio.R;
 import org.jokar.gankio.model.entities.DataEntities;
@@ -27,10 +28,12 @@ public class DailyGankAdapter extends RecyclerView.Adapter<DailyGankAdapter.Dail
     private LayoutInflater mInflater;
     private ItemClickListener mListener;
     private List<DataEntities> mDataEntitiesList;
-
-    public DailyGankAdapter(Context context, GankDayEntities gankDayEntities) {
+    private LifecycleTransformer mLifecycleTransformer;
+    public DailyGankAdapter(Context context, GankDayEntities gankDayEntities,
+                            LifecycleTransformer<Object> objectLifecycleTransformer) {
         mContext = context;
         mGankDayEntities = gankDayEntities;
+        mLifecycleTransformer = objectLifecycleTransformer;
         mInflater = LayoutInflater.from(mContext);
 
 
@@ -63,7 +66,8 @@ public class DailyGankAdapter extends RecyclerView.Adapter<DailyGankAdapter.Dail
                 DescViewHolder viewHolder = (DescViewHolder) holder;
                 viewHolder.tv_desc.setText(dataEntities.getDesc());
                 //点击事件
-                RxView.clicks(viewHolder.ll_gank).subscribe(aVoid -> {
+                RxView.clicks(viewHolder.ll_gank)
+                       .compose(mLifecycleTransformer).subscribe(aVoid -> {
                     if (mListener != null) {
                         mListener.itemClick(dataEntities);
                     }

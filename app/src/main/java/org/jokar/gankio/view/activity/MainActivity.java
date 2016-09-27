@@ -116,8 +116,8 @@ public class MainActivity extends BaseActivity implements MainView {
         });
 
 
-        RxView.clicks(toolbar).subscribe(aVoid -> {
-            RxBus.getBus().send(new MainToolbarEvent());
+        RxView.clicks(toolbar).compose(bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(aVoid -> { RxBus.getBus().send(new MainToolbarEvent());
         });
         //请求获取今日干货
         mMainPresenter.requestDailyGank(System.currentTimeMillis(),

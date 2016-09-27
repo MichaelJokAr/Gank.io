@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jakewharton.rxbinding.view.RxView;
+import com.trello.rxlifecycle.LifecycleTransformer;
 
 import org.jokar.gankio.R;
 import org.jokar.gankio.model.entities.DataEntities;
@@ -42,12 +43,14 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
     private String mType;
     public FootViewHolder mFootViewHolder;
     private ItemClickListener mClickListener;
-
+    private LifecycleTransformer lifecycleTransformer;
     public GankioFragmentAdapter(Context context, String type,
-                                 List<DataEntities> mSearchEntitiesList) {
+                                 List<DataEntities> mSearchEntitiesList,
+                                 LifecycleTransformer<Object> objectLifecycleTransformer) {
         mContext = context;
         mType = type;
         this.mSearchEntitiesList = mSearchEntitiesList;
+        lifecycleTransformer = objectLifecycleTransformer;
         mInflater = LayoutInflater.from(mContext);
         sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     }
@@ -87,7 +90,8 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
                     e.printStackTrace();
                 }
                 //设置点击事件
-                RxView.clicks(viewHolder.ll_continear).subscribe(aVoid -> {
+                RxView.clicks(viewHolder.ll_continear)
+                        .compose(lifecycleTransformer).subscribe(aVoid -> {
                     if (mClickListener != null) {
                         mClickListener.itemClick(entities);
                     }
@@ -102,7 +106,8 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
                 imageViewHolder.tvTime.setText(entities.getDesc());
                 imageViewHolder.loadImage(entities.getUrl(), mContext);
                 //设置点击事件
-                RxView.clicks(imageViewHolder.ll_continear).subscribe(aVoid -> {
+                RxView.clicks(imageViewHolder.ll_continear)
+                        .compose(lifecycleTransformer).subscribe(aVoid -> {
                     if (mClickListener != null) {
                         mClickListener.imageItemClick(entities, imageViewHolder.image);
                     }
@@ -123,7 +128,8 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
                 }
                 //设置点击事件
 
-                RxView.clicks(allViewHolder.ll_continear).subscribe(aVoid -> {
+                RxView.clicks(allViewHolder.ll_continear)
+                        .compose(lifecycleTransformer).subscribe(aVoid -> {
                     if (mClickListener != null) {
                         mClickListener.itemClick(entities);
                     }
@@ -133,7 +139,8 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
 
             case 3: {//footView
                 //设置点击事件
-                RxView.clicks(mFootViewHolder.ll_foot).subscribe(aVoid -> {
+                RxView.clicks(mFootViewHolder.ll_foot)
+                        .compose(lifecycleTransformer).subscribe(aVoid -> {
                     if (mClickListener != null) {
                         mFootViewHolder.showProgress();
                         mClickListener.footViewClick();

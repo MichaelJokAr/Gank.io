@@ -141,7 +141,8 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
                 .build()
                 .inject(this);
 
-        mAdapter = new GankioFragmentAdapter(getContext(), type, mDataEntitiesList);
+        mAdapter = new GankioFragmentAdapter(getContext(), type, mDataEntitiesList,
+                bindUntilEvent(FragmentEvent.DESTROY));
         recyclerView.setAdapter(mAdapter);
         setAdapterClick();
         //请求数据

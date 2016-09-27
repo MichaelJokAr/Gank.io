@@ -114,8 +114,8 @@ public class GankDayEntities {
      * @return
      */
     public boolean isNull() {
-        if (hasAndroid() && hasExpandRes() && hasIOS() && hasRecommended()
-                && hasVideoRest() && hasWelfare()) {
+        if (hasAndroid() || hasExpandRes() || hasIOS() || hasRecommended()
+                || hasVideoRest() || hasWelfare()) {
             return false;
         }
         return true;

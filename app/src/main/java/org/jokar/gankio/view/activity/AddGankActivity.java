@@ -86,15 +86,18 @@ public class AddGankActivity extends BaseActivity implements AddGankView {
                 .build()
                 .inject(this);
         //绑定输入view事件
-        RxTextView.textChanges(edDesc).subscribe(charSequence -> {
+        RxTextView.textChanges(edDesc).compose(bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(charSequence -> {
             layoutDesc.setErrorEnabled(false);
             layoutDesc.setHintEnabled(true);
         });
-        RxTextView.textChanges(edUrl).subscribe(charSequence -> {
+        RxTextView.textChanges(edUrl).compose(bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(charSequence -> {
             layoutUrl.setErrorEnabled(false);
             layoutUrl.setHintEnabled(true);
         });
-        RxTextView.textChanges(edWho).subscribe(charSequence -> {
+        RxTextView.textChanges(edWho).compose(bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(charSequence -> {
             layoutWho.setErrorEnabled(false);
             layoutWho.setHintEnabled(true);
         });

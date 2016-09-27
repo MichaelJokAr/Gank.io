@@ -27,7 +27,8 @@ public class AboutFragment extends PreferenceFragment implements Preference.OnPr
     AboutPresenter mAboutPresenter;
     private File cacheFile;
     private Preference imageCache;
-
+    private Preference github;
+    private Preference csdn;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +40,8 @@ public class AboutFragment extends PreferenceFragment implements Preference.OnPr
 
         Preference version = findPreference("currentVersion");
         imageCache = findPreference("imageCache");
-        Preference github = findPreference("github");
-        Preference csdn = findPreference("csdn");
+        github = findPreference("github");
+        csdn = findPreference("csdn");
 
         imageCache.setOnPreferenceClickListener(this);
         github.setOnPreferenceClickListener(this);
@@ -96,5 +97,13 @@ public class AboutFragment extends PreferenceFragment implements Preference.OnPr
             }
         }
         return false;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        imageCache.setOnPreferenceClickListener(null);
+        github.setOnPreferenceClickListener(null);
+        csdn.setOnPreferenceClickListener(null);
     }
 }
