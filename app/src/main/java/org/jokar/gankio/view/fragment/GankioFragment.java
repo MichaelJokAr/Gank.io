@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.util.DiffUtil;
-import android.support.v7.util.ListUpdateCallback;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -28,7 +27,6 @@ import org.jokar.gankio.di.module.view.FragmentViewModule;
 import org.jokar.gankio.model.entities.DataEntities;
 import org.jokar.gankio.model.rxbus.RxBus;
 import org.jokar.gankio.model.rxbus.event.MainToolbarEvent;
-import org.jokar.gankio.model.rxbus.event.MainViewPagerEvent;
 import org.jokar.gankio.presenter.impl.DataPresenterImpl;
 import org.jokar.gankio.utils.DataEntitieDiffCallback;
 import org.jokar.gankio.utils.JToast;
@@ -39,7 +37,6 @@ import org.jokar.gankio.view.ui.FragmentView;
 import org.jokar.gankio.widget.ErrorView;
 import org.jokar.gankio.widget.LazzyFragment;
 import org.jokar.gankio.widget.RecyclerOnScrollListener;
-import org.jokar.gankio.widget.SpacesItemDecoration;
 
 import java.util.List;
 
@@ -47,7 +44,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.functions.Action1;
 
 /**
  * GanK.io
@@ -133,8 +129,6 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
     @Override
     public void loadData() {
         super.loadData();
-        RxBus.getBus().send(new MainViewPagerEvent(type));
-
         //初始化
         DataDBCom dataDBCom = DaggerDataDBCom.builder()
                 .dataDBModule(new DataDBModule(getContext()))
@@ -147,6 +141,9 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
                 .build()
                 .inject(this);
 
+        mAdapter = new GankioFragmentAdapter(getContext(), type, mDataEntitiesList);
+        recyclerView.setAdapter(mAdapter);
+        setAdapterClick();
         //请求数据
         mPresenter.request(mDataDB, type, 15, 1, bindUntilEvent(FragmentEvent.STOP));
 
@@ -166,9 +163,11 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
     @Override
     public void loadStartLocalData(List<DataEntities> searchEntities) {
         mDataEntitiesList = searchEntities;
-        mAdapter = new GankioFragmentAdapter(getContext(), type, mDataEntitiesList);
-        recyclerView.setAdapter(mAdapter);
-        setAdapterClick();
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
+                new DataEntitieDiffCallback(mAdapter.getData(), mDataEntitiesList));
+        mAdapter.setData(mDataEntitiesList);
+        diffResult.dispatchUpdatesTo(mAdapter);
+
     }
 
     @Override
@@ -199,17 +198,12 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
             recyclerView.setVisibility(View.VISIBLE);
         }
         mDataEntitiesList = searchEntities;
-        if (mAdapter == null) {
-            mAdapter = new GankioFragmentAdapter(getContext(), type, mDataEntitiesList);
-            recyclerView.setAdapter(mAdapter);
-        } else {
-            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
-                    new DataEntitieDiffCallback(mAdapter.getData(), mDataEntitiesList));
 
-            mAdapter.setData(mDataEntitiesList);
-            diffResult.dispatchUpdatesTo(mAdapter);
-        }
-        setAdapterClick();
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
+                new DataEntitieDiffCallback(mAdapter.getData(), mDataEntitiesList));
+        mAdapter.setData(mDataEntitiesList);
+        diffResult.dispatchUpdatesTo(mAdapter);
+
     }
 
     @Override

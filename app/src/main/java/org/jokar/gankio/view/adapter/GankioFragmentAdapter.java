@@ -66,7 +66,7 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
                 return mFootViewHolder;
             }
             case 4:
-                return new ImageViewHolder(mInflater.inflate(R.layout.item_all_imagefragment,parent,false));
+                return new ImageViewHolder(mInflater.inflate(R.layout.item_all_imagefragment, parent, false));
         }
         return null;
     }
@@ -87,7 +87,7 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
                     e.printStackTrace();
                 }
                 //设置点击事件
-                RxView.clicks(viewHolder.ll_continear).subscribe(aVoid ->{
+                RxView.clicks(viewHolder.ll_continear).subscribe(aVoid -> {
                     if (mClickListener != null) {
                         mClickListener.itemClick(entities);
                     }
@@ -95,8 +95,7 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
                 break;
             }
             case 1:
-            case 4:
-            { //图片类型
+            case 4: { //图片类型
                 DataEntities entities = mSearchEntitiesList.get(position);
                 holder.setWho(entities.getWho());
                 ImageViewHolder imageViewHolder = (ImageViewHolder) holder;
@@ -105,7 +104,7 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
                 //设置点击事件
                 RxView.clicks(imageViewHolder.ll_continear).subscribe(aVoid -> {
                     if (mClickListener != null) {
-                        mClickListener.imageItemClick(entities,imageViewHolder.image);
+                        mClickListener.imageItemClick(entities, imageViewHolder.image);
                     }
                 });
                 break;
@@ -134,7 +133,7 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
 
             case 3: {//footView
                 //设置点击事件
-                RxView.clicks(mFootViewHolder.ll_foot).subscribe(aVoid ->{
+                RxView.clicks(mFootViewHolder.ll_foot).subscribe(aVoid -> {
                     if (mClickListener != null) {
                         mFootViewHolder.showProgress();
                         mClickListener.footViewClick();
@@ -147,7 +146,7 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
 
     @Override
     public int getItemCount() {
-        return mSearchEntitiesList.size() + 1;
+        return mSearchEntitiesList != null ? mSearchEntitiesList.size() + 1 : 0;
     }
 
     @Override
@@ -177,11 +176,11 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
         mClickListener = listener;
     }
 
-    public List<DataEntities> getData(){
+    public List<DataEntities> getData() {
         return mSearchEntitiesList;
     }
 
-    public void setData(List<DataEntities> data){
+    public void setData(List<DataEntities> data) {
         this.mSearchEntitiesList = new ArrayList<>(data);
     }
 
@@ -302,7 +301,7 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
 
         void footViewClick();
 
-        void imageItemClick(DataEntities dataEntitie,ImageView imageView);
+        void imageItemClick(DataEntities dataEntitie, ImageView imageView);
     }
 
 }

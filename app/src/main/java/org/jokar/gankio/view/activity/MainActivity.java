@@ -28,13 +28,10 @@ import org.jokar.gankio.di.module.models.DailyGankModelModule;
 import org.jokar.gankio.di.module.view.MainViewModule;
 import org.jokar.gankio.model.rxbus.RxBus;
 import org.jokar.gankio.model.rxbus.event.MainToolbarEvent;
-import org.jokar.gankio.model.rxbus.event.MainViewPagerEvent;
 import org.jokar.gankio.presenter.impl.MainPresenterImpl;
 import org.jokar.gankio.view.adapter.FragmentAdapter;
 import org.jokar.gankio.view.fragment.GankioFragment;
 import org.jokar.gankio.view.ui.MainView;
-
-import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -64,8 +61,6 @@ public class MainActivity extends BaseActivity implements MainView {
     // all | Android | iOS | 休息视频 | 福利 | 拓展资源 | 前端 | 瞎推荐 | App
 //    private List<String> types = Arrays.asList("all", "Android", "iOS", "休息视频", "福利", "拓展资源", "前端", "瞎推荐", "App");
 
-    private ArrayList<String> viewPageOffscreenCount;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,17 +85,15 @@ public class MainActivity extends BaseActivity implements MainView {
                 .build()
                 .inject(this);
 
-        viewPageOffscreenCount = new ArrayList<>();
-        viewPageOffscreenCount.add("All");
         mPagerAdapter = new FragmentAdapter(getSupportFragmentManager());
+        //添加fragment
         addFragmet();
-
+        //设置tabLayout
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabLayout.setSelectedTabIndicatorColor(Color.WHITE);
         tabLayout.setTabTextColors(Color.WHITE, Color.WHITE);
         viewPager.setAdapter(mPagerAdapter);
-        viewPager.setOffscreenPageLimit(viewPageOffscreenCount.size());
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -121,12 +114,7 @@ public class MainActivity extends BaseActivity implements MainView {
 
             }
         });
-        RxBus.getBus().toMainThreadObserverable(bindUntilEvent(ActivityEvent.DESTROY))
-                .subscribe(event -> {
-                    //设置viewpager缓存
-                    if (event instanceof MainViewPagerEvent)
-                        setOffscreenPageLimit((MainViewPagerEvent) event);
-                });
+
 
         RxView.clicks(toolbar).subscribe(aVoid -> {
             RxBus.getBus().send(new MainToolbarEvent());
@@ -205,19 +193,6 @@ public class MainActivity extends BaseActivity implements MainView {
         }
     }
 
-    /**
-     * 设置viewpager缓存
-     *
-     * @param event
-     */
-    private void setOffscreenPageLimit(MainViewPagerEvent event) {
-        String type = event.getType();
-        if (!viewPageOffscreenCount.contains(type)) {
-            viewPageOffscreenCount.add(type);
-            viewPager.setOffscreenPageLimit(viewPageOffscreenCount.size());
-
-        }
-    }
 
     private void animateIn(FloatingActionButton fab) {
 

@@ -22,12 +22,12 @@ public class DataEntitieDiffCallback extends DiffUtil.Callback {
 
     @Override
     public int getOldListSize() {
-        return oldDataEntitiesList.size();
+        return oldDataEntitiesList != null ? oldDataEntitiesList.size() : 0;
     }
 
     @Override
     public int getNewListSize() {
-        return newDataEntitiesList.size();
+        return newDataEntitiesList != null ? newDataEntitiesList.size() : 0;
     }
 
     @Override
