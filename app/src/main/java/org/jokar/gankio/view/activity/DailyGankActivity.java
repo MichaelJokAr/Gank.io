@@ -129,7 +129,7 @@ public class DailyGankActivity extends BaseActivity implements DailyGankView {
     public void loadData(GankDayEntities gankDayEntities) {
         mGankDayEntities = gankDayEntities;
         setBackgroundImage(mGankDayEntities);
-        mAdapter = new DailyGankAdapter(this, mGankDayEntities,bindUntilEvent(ActivityEvent.DESTROY));
+        mAdapter = new DailyGankAdapter(this, mGankDayEntities, bindUntilEvent(ActivityEvent.DESTROY));
         recyclerView.setAdapter(mAdapter);
         mAdapter.setListener(dataEntities -> {
             Intent intent = new Intent(this, GankActivity.class);
@@ -159,5 +159,8 @@ public class DailyGankActivity extends BaseActivity implements DailyGankView {
     protected void onDestroy() {
         super.onDestroy();
         mGankDayEntities = null;
+        if (mAdapter != null) {
+            mAdapter.setListener(null);
+        }
     }
 }

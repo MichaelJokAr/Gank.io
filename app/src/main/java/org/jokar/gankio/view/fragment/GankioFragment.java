@@ -120,7 +120,9 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
                 .subscribe(event -> {
                     if (event instanceof MainToolbarEvent) {
                         if (recyclerView != null && mIsVisibleToUser) {
-                            recyclerView.scrollToPosition(0);
+
+                            recyclerView.post(() -> recyclerView.scrollToPosition(0));
+
                         }
                     }
                 });
@@ -281,5 +283,12 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         mIsVisibleToUser = isVisibleToUser;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mAdapter != null)
+            mAdapter.setOnItemClickListener(null);
     }
 }
