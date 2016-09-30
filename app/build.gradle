@@ -4,7 +4,7 @@ Properties props = new Properties()
 props.load(new FileInputStream(file("configuration.properties")))
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion '24.0.3'
 
     defaultConfig {
         applicationId "org.jokar.gankio"
@@ -97,5 +97,4 @@ dependencies {
     //权限
     compile 'org.jokar:permissiondispatcher:latest.release'
     annotationProcessor 'org.jokar:permissiondispatcher-processor:latest.release'
-    
 }

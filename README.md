@@ -8,6 +8,7 @@ a client for <a href="http://gank.io/">gank.io</a> with use dagger2+MVP+Rxjava</
 - Android-Studio: 2.2 version
 - Java version : Java8
 - SDK Tool: 24.0.2 version
+- jackOptions: true
 
 ### Points
 - MVP
