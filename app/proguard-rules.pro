@@ -15,18 +15,81 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+#optimizationpasses表示对代码进行迭代优化的次数，optimization可以对代码进行各种优化，每次优化后还可以继续优化，故称之迭代优化；
+-optimizationpasses 5
+#混淆时不产生混合大小写的类名
+-dontusemixedcaseclassnames
+#指定不去忽略非公共的库类
+-dontskipnonpubliclibraryclasses
+#不预校验
+-dontpreverify
 
+#显示混淆的log，帮助排错
+-verbose
+
+#代码混淆采用的算法，一般不改变，使用谷歌默认算法即可
+-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+
+#如果项目中有用到注释，则加入
+-keepattributes *Annotation*
+-keepattributes Signature
+
+#指定类不进行混淆，保持原样
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Application
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep public class * extends android.app.backup.BackupAgentHelper
+-keep public class * extends android.preference.Preference
+-keep public class com.android.vending.licensing.ILicensingService
+-keep public class * extends android.app.Fragment
+-keep public class * extends android.support.v4.**
+-keep public class * extends android.support.annotation.**
+-keep public class * extends android.support.v7.**
+-keep public class android.app.Notification
+-keep public class android.webkit.**
+
+#保护WebView对HTML页面的API不被混淆
+-keep class **.Webview2JsInterface {*; }
+-keep public class * extends android.app.Dialog
+-keep public class * extends android.view
+
+#保持自定义控件类，不被混淆
+-keepclasseswithmembernames class * {
+    public <init>(android.content.Context, android.util.AttributeSet);
+}
+
+-keepclasseswithmembernames class * {
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+
+-keepclasseswithmembers class * {
+    public <init>(android.content.Context);
+}
+
+#保持枚举类不进行混淆
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+#保持 Parcelable 类不被混淆
+-keep class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator *;
+}
+#保持R文件不被混淆，否则，你的反射是获取不到资源id的
+-keep class **.R*{*;}
 
 #bugly
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
 #glide
--keep public class * implements com.bumptech.glide.module.GlideModule
+-keepnames class org.jokar.gankio.app.GlideModuleSetting
 -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
   **[] $VALUES;
   public *;
 }
--keepresourcexmlelements manifest/application/meta-data@value=GlideModule
+#-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 
 #retrofit
 # Platform calls Class.forName on types which do not exist on Android to determine platform.
@@ -76,16 +139,11 @@
     long consumerNode;
 }
 
-#photoview
--dontwarn uk.co.senab.photoview.**
--keep class uk.co.senab.photoview.** { *;}
-
 #support
 -dontwarn com.support.**
 -keep class com.support.** { *;}
 
 #butterknife
-
 -keep public class * implements butterknife.Unbinder { public <init>(...); }
 -keep class butterknife.*
 -keepclasseswithmembernames class * { @butterknife.* <methods>; }

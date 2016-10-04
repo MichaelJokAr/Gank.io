@@ -34,20 +34,22 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
             zipAlignEnabled true
             shrinkResources false
             buildConfigField("boolean", "LOG_DEBUG", "false")
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
         debug {
-            signingConfig signingConfigs.release
             zipAlignEnabled true
             shrinkResources false
             buildConfigField("boolean", "LOG_DEBUG", "true")
             debuggable true
             jniDebuggable true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 

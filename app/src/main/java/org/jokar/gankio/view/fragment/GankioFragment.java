@@ -44,6 +44,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * GanK.io
@@ -62,6 +63,8 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
     DataDB mDataDB;
     @Inject
     DataPresenterImpl mPresenter;
+
+    Unbinder mUnbinder;
 
     private GankioFragmentAdapter mAdapter;
     private String type;
@@ -82,7 +85,7 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
     @Override
     public View getView(LayoutInflater inflater, ViewGroup container) {
         View view = inflater.inflate(R.layout.fragment_all, container, false);
-        ButterKnife.bind(this, view);
+        mUnbinder = ButterKnife.bind(this, view);
         return view;
     }
 
@@ -286,9 +289,12 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
+        mUnbinder.unbind();
+
         if (mAdapter != null)
             mAdapter.setOnItemClickListener(null);
     }
+
 }
