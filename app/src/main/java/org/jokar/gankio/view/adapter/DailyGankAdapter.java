@@ -16,6 +16,7 @@ import org.jokar.gankio.model.entities.DataEntities;
 import org.jokar.gankio.model.entities.GankDayEntities;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by JokAr on 2016/9/25.
@@ -29,6 +30,7 @@ public class DailyGankAdapter extends RecyclerView.Adapter<DailyGankAdapter.Dail
     private ItemClickListener mListener;
     private List<DataEntities> mDataEntitiesList;
     private LifecycleTransformer mLifecycleTransformer;
+
     public DailyGankAdapter(Context context, GankDayEntities gankDayEntities,
                             LifecycleTransformer<Object> objectLifecycleTransformer) {
         mContext = context;
@@ -67,7 +69,8 @@ public class DailyGankAdapter extends RecyclerView.Adapter<DailyGankAdapter.Dail
                 viewHolder.tv_desc.setText(dataEntities.getDesc());
                 //点击事件
                 RxView.clicks(viewHolder.ll_gank)
-                       .compose(mLifecycleTransformer).subscribe(aVoid -> {
+                        .compose(mLifecycleTransformer)
+                        .throttleFirst(1L, TimeUnit.SECONDS).subscribe(aVoid -> {
                     if (mListener != null) {
                         mListener.itemClick(dataEntities);
                     }
@@ -106,10 +109,10 @@ public class DailyGankAdapter extends RecyclerView.Adapter<DailyGankAdapter.Dail
      * @param data
      * @param beginIndex
      * @param endIndex
-     * @return  返回data在集合里最接近的大数小标
+     * @return 返回data在集合里最接近的大数小标
      */
     private int binarySearch(List<Integer> dataset, int data,
-                                   int beginIndex, int endIndex) {
+                             int beginIndex, int endIndex) {
 
         int midIndex = (beginIndex + endIndex) / 2;
 
