@@ -3,6 +3,7 @@ package org.jokar.gankio.view.fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.util.DiffUtil;
@@ -81,6 +82,20 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
         type = args.getString("type");
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("type", type);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            type = savedInstanceState.getString("type");
+        }
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
 
     @Override
     public View getView(LayoutInflater inflater, ViewGroup container) {
