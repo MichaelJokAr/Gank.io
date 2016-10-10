@@ -11,34 +11,58 @@ public class JLog {
     private static final String TAG = "Gank.io";
 
     public static void d(String value){
-        if(BuildConfig.LOG_DEBUG)
-            Log.d(TAG, value);
+        try {
+            if(BuildConfig.LOG_DEBUG)
+                Log.d(TAG, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void d(int value){
-        if(BuildConfig.LOG_DEBUG)
-            Log.d(TAG, value+"");
+        try {
+            if(BuildConfig.LOG_DEBUG)
+                Log.d(TAG, value+"");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void d(long value){
-        if(BuildConfig.LOG_DEBUG)
-            Log.d(TAG, value+"");
+        try {
+            if(BuildConfig.LOG_DEBUG)
+                Log.d(TAG, value+"");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void e(String value){
-        if(BuildConfig.LOG_DEBUG)
-            Log.e(TAG, value);
+        try {
+            if(BuildConfig.LOG_DEBUG)
+                Log.e(TAG, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void e(Throwable value){
-        if(BuildConfig.LOG_DEBUG) {
-            value.printStackTrace();
-            Log.e(TAG, value.getMessage());
+        try {
+            if(BuildConfig.LOG_DEBUG) {
+                value.printStackTrace();
+                Log.e(TAG, value.getMessage());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public static void d(boolean value) {
-        if(BuildConfig.LOG_DEBUG)
-            Log.d(TAG, value+"");
+        try {
+            if(BuildConfig.LOG_DEBUG)
+                Log.d(TAG, value+"");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

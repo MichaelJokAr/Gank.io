@@ -6,7 +6,6 @@ import org.jokar.gankio.db.DataDB;
 import org.jokar.gankio.model.entities.DataEntities;
 import org.jokar.gankio.model.event.DataModel;
 import org.jokar.gankio.presenter.event.DataPresenter;
-import org.jokar.gankio.utils.JLog;
 import org.jokar.gankio.view.ui.FragmentView;
 
 import java.util.List;
