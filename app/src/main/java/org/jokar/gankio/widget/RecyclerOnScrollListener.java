@@ -53,5 +53,7 @@ public abstract class RecyclerOnScrollListener extends RecyclerView.OnScrollList
 
     public void setLoading(boolean loading) {
         this.loading = loading;
+        if (loading)
+            previousTotal = mHelper.getItemCount();
     }
 }
