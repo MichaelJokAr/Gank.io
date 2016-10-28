@@ -76,6 +76,7 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
     private List<DataEntities> mDataEntitiesList;
 
     private boolean mIsVisibleToUser = false;
+    private RecyclerOnScrollListener mOnScrollListener;
 
     @Override
     public void setArguments(Bundle args) {
@@ -112,14 +113,15 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_light
                 , android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light);
 
-        recyclerView.addOnScrollListener(new RecyclerOnScrollListener(recyclerView) {
+        mOnScrollListener = new RecyclerOnScrollListener(recyclerView) {
             @Override
             public void onLoadMore(int currentPage) {
                 mAdapter.setFootClickable(false);
                 pageSize++;
                 mPresenter.loadMore(mDataDB, type, count, pageSize, bindUntilEvent(FragmentEvent.STOP));
             }
-        });
+        };
+        recyclerView.addOnScrollListener(mOnScrollListener);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             errorView.setRetryButtonClickable(false);
             mPresenter.refrsh(mDataDB, type, count, 1, bindUntilEvent(FragmentEvent.STOP));
@@ -236,6 +238,7 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
 
     @Override
     public void loadMore(List<DataEntities> dataEntitiesList) {
+        mOnScrollListener.setLoading(false);
         mDataEntitiesList.addAll(dataEntitiesList);
 
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff
@@ -251,6 +254,7 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
     @Override
     public void loadMoreFail(Throwable e) {
         JToast.Toast(getContext(), "加载失败: " + e.getMessage());
+        mOnScrollListener.setLoading(true);
         pageSize--;
         mAdapter.setFootClickable(true);
         mAdapter.footShowClickText();

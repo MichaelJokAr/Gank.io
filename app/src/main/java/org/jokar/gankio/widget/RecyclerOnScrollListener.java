@@ -50,4 +50,8 @@ public abstract class RecyclerOnScrollListener extends RecyclerView.OnScrollList
     }
 
     public abstract void onLoadMore(int currentPage);
+
+    public void setLoading(boolean loading) {
+        this.loading = loading;
+    }
 }
