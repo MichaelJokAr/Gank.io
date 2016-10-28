@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.trello.rxlifecycle.android.FragmentEvent;
 
 import org.jokar.gankio.R;
@@ -94,7 +95,7 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             type = savedInstanceState.getString("type");
         }
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -174,7 +175,8 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
 
     @Override
     public void completeLoadProgress() {
-        swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(false));
+        if (swipeRefreshLayout != null)
+            swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(false));
     }
 
     @Override
@@ -306,11 +308,12 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
 
         if (mAdapter != null)
             mAdapter.setOnItemClickListener(null);
+        Glide.with(getContext()).onDestroy();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putCharSequence("type",type);
+        outState.putCharSequence("type", type);
         super.onSaveInstanceState(outState);
     }
 }

@@ -113,6 +113,5 @@ public class DailyGankModelImpl implements DailyGankModel {
                             });
 
                 });
-
     }
 }
