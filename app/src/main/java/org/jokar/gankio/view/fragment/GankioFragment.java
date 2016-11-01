@@ -32,6 +32,7 @@ import org.jokar.gankio.model.rxbus.event.MainToolbarEvent;
 import org.jokar.gankio.presenter.impl.DataPresenterImpl;
 import org.jokar.gankio.utils.DataEntitieDiffCallback;
 import org.jokar.gankio.utils.JToast;
+import org.jokar.gankio.utils.image.Imageloader;
 import org.jokar.gankio.view.activity.GankActivity;
 import org.jokar.gankio.view.activity.GankImageActivity;
 import org.jokar.gankio.view.adapter.GankioFragmentAdapter;
@@ -116,6 +117,7 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
         mOnScrollListener = new RecyclerOnScrollListener(recyclerView) {
             @Override
             public void onLoadMore(int currentPage) {
+                Imageloader.clearCache(getContext());
                 mAdapter.setFootClickable(false);
                 pageSize++;
                 mPresenter.loadMore(mDataDB, type, count, pageSize, bindUntilEvent(FragmentEvent.STOP));
@@ -312,7 +314,7 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
 
         if (mAdapter != null)
             mAdapter.setOnItemClickListener(null);
-        Glide.with(getContext()).onDestroy();
+
     }
 
     @Override

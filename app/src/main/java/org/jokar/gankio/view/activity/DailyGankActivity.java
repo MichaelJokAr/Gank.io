@@ -11,8 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.trello.rxlifecycle.android.ActivityEvent;
 
 import org.jokar.gankio.R;
@@ -26,6 +24,7 @@ import org.jokar.gankio.di.module.view.DailyGankViewModule;
 import org.jokar.gankio.model.entities.DataEntities;
 import org.jokar.gankio.model.entities.GankDayEntities;
 import org.jokar.gankio.presenter.impl.DailyGankPresenterImpl;
+import org.jokar.gankio.utils.image.Imageloader;
 import org.jokar.gankio.view.adapter.DailyGankAdapter;
 import org.jokar.gankio.view.ui.DailyGankView;
 import org.jokar.gankio.widget.ErrorView;
@@ -141,10 +140,8 @@ public class DailyGankActivity extends BaseActivity implements DailyGankView {
     private void setBackgroundImage(GankDayEntities gankDayEntities) {
         if (gankDayEntities.hasWelfare()) {
             List<DataEntities> welfare = gankDayEntities.getWelfare();
-            Glide.with(this)
-                    .load(welfare.get(0).getUrl())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(image);
+
+            Imageloader.loadImage(this,welfare.get(0).getUrl(),image);
         }
     }
 

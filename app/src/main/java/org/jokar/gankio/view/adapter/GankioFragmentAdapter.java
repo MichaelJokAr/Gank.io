@@ -3,6 +3,7 @@ package org.jokar.gankio.view.adapter;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,17 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.LifecycleTransformer;
 
 import org.jokar.gankio.R;
 import org.jokar.gankio.model.entities.DataEntities;
+import org.jokar.gankio.model.entities.ImageSize;
+import org.jokar.gankio.utils.image.BitmapSizeTranscoder;
+import org.jokar.gankio.utils.image.Imageloader;
 import org.jokar.gankio.widget.RelativeTimeTextView;
 
 import java.text.ParseException;
@@ -99,12 +106,29 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
                 });
                 break;
             }
-            case 1:
-            case 4: { //图片类型
+            case 4: {
                 DataEntities entities = mSearchEntitiesList.get(position);
                 holder.setWho(entities.getWho());
                 ImageViewHolder imageViewHolder = (ImageViewHolder) holder;
-                imageViewHolder.tvTime.setText(entities.getDesc());
+
+                Imageloader.loadImageCenterCrop(mContext, entities.getUrl(),
+                        R.mipmap.default_image,
+                        imageViewHolder.image);
+                //设置点击事件
+                RxView.clicks(imageViewHolder.ll_continear)
+                        .compose(lifecycleTransformer)
+                        .throttleFirst(1L, TimeUnit.SECONDS).subscribe(aVoid -> {
+                    if (mClickListener != null) {
+                        mClickListener.imageItemClick(entities, imageViewHolder.image);
+                    }
+                });
+                break;
+            }
+            case 1: { //图片类型
+                DataEntities entities = mSearchEntitiesList.get(position);
+
+                ImageViewHolder imageViewHolder = (ImageViewHolder) holder;
+
                 imageViewHolder.loadImage(entities.getUrl(), mContext);
                 //设置点击事件
                 RxView.clicks(imageViewHolder.ll_continear)
@@ -212,24 +236,37 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
 
     class ImageViewHolder extends GankViewHolder {
         ImageView image;
-        TextView tvTime;
+
+        View itemView;
 
         public ImageViewHolder(View itemView) {
             super(itemView);
+            this.itemView = itemView;
             image = (ImageView) itemView.findViewById(R.id.image);
-            tvTime = (TextView) itemView.findViewById(R.id.tvTime);
+
             cardView = (CardView) itemView.findViewById(R.id.cardView);
             ll_continear = (LinearLayout) itemView.findViewById(R.id.ll_continear);
         }
 
         public void loadImage(String url, Context context) {
+            Imageloader.loadImage(context, url, R.mipmap.default_image, image);
             Glide.with(context)
                     .load(url)
-                    .placeholder(R.mipmap.default_image)
-                    .error(R.mipmap.default_image)
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(image);
+                    .asBitmap()
+                    .transcode(new BitmapSizeTranscoder(), ImageSize.class)
+                    .into(new SimpleTarget<ImageSize>() {
+                        @Override
+                        public void onResourceReady(ImageSize resource,
+                                                    GlideAnimation<? super ImageSize> glideAnimation) {
+
+                            StaggeredGridLayoutManager.LayoutParams layoutParams =
+                                    (StaggeredGridLayoutManager.LayoutParams) itemView.getLayoutParams();
+                            int height = resource.getHeight() / 2;
+
+                            layoutParams.height = height;
+                            itemView.setLayoutParams(layoutParams);
+                        }
+                    });
         }
     }
 

@@ -11,6 +11,7 @@ import org.jokar.gankio.BuildConfig;
 import org.jokar.gankio.di.component.network.DaggerNetComponent;
 import org.jokar.gankio.di.component.network.NetComponent;
 import org.jokar.gankio.di.module.network.NetModule;
+import org.jokar.gankio.utils.image.Imageloader;
 
 
 /**
@@ -51,6 +52,22 @@ public class GankioApplication extends Application {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return 0;
+        }
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        Imageloader.clearCache(this);
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        switch (level){
+            case TRIM_MEMORY_RUNNING_MODERATE:
+                Imageloader.clearCache(this);
+                break;
         }
     }
 }

@@ -18,35 +18,9 @@
 			android:id="@+id/image"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:scaleType="fitXY"
 			android:transitionName="@string/transition_name_image"
 			/>
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="5dp"
-			android:gravity="right"
-			android:orientation="horizontal">
-
-			<TextView
-				android:id="@+id/tvWho"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:paddingBottom="5dp"
-				android:paddingRight="10dp"
-				android:text=""
-				android:textColor="@android:color/darker_gray"
-				android:textSize="13dp"/>
-
-			<TextView
-				android:id="@+id/tvTime"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:paddingBottom="5dp"
-				android:paddingRight="10dp"
-				android:text=""
-				android:textColor="@android:color/darker_gray"
-				android:textSize="13dp"/>
-		</LinearLayout>
 	</LinearLayout>
 </android.support.v7.widget.CardView>

@@ -32,6 +32,10 @@ a client for <a href="http://gank.io/">gank.io</a> with use dagger2+MVP+Rxjava</
 </p>
 </body>
 
+### Download
+![alt](http://link)
+[Download link ](http://download.fir.im/v2/app/install/5548713eaeea34070300000c?download_token=f7dc75d02451afb2d143d7f26c30d144)
+
 
 ### Thanks
 感谢<a href="https://github.com/HotBitmapGG">@hcc</a>的 <a href="https://github.com/HotBitmapGG/AndroidRank">AndroidRank</a>项目,让我学习了很多东西
