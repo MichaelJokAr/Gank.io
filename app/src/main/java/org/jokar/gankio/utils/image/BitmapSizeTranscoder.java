@@ -20,6 +20,7 @@ public class BitmapSizeTranscoder implements ResourceTranscoder<Bitmap, ImageSiz
         ImageSize size = new ImageSize();
         size.setWidth(bitmap.getWidth());
         size.setHeight(bitmap.getHeight());
+        bitmap = null;
         return new SimpleResource<>(size);
     }
 

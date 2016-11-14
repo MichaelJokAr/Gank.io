@@ -207,6 +207,15 @@ public class GankioFragmentAdapter extends RecyclerView.Adapter<GankioFragmentAd
 
     }
 
+    @Override
+    public void onViewRecycled(GankViewHolder holder) {
+        super.onViewRecycled(holder);
+       if(holder instanceof ImageViewHolder){
+           ImageViewHolder viewHolder = (ImageViewHolder) holder;
+           Glide.clear(viewHolder.image);
+       }
+    }
+
     public void setOnItemClickListener(ItemClickListener listener) {
         mClickListener = listener;
     }

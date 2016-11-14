@@ -1,8 +1,15 @@
 package org.jokar.gankio.widget;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import org.jokar.gankio.utils.RecyclerViewPositionHelper;
+
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_SETTLING;
 
 /**
  * RecycleView上拉加载更多
@@ -19,11 +26,29 @@ public abstract class RecyclerOnScrollListener extends RecyclerView.OnScrollList
     private int currentPage = 1;
 
     private RecyclerViewPositionHelper mHelper;
+    private Context mContext;
 
-    public RecyclerOnScrollListener(RecyclerView recyclerView) {
+    public RecyclerOnScrollListener(RecyclerView recyclerView, Context context) {
 
         mHelper = new RecyclerViewPositionHelper(recyclerView);
+        mContext = context;
     }
+
+//    @Override
+//    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//        super.onScrollStateChanged(recyclerView, newState);
+//        switch (newState) {
+//            case SCROLL_STATE_SETTLING:
+//            case SCROLL_STATE_IDLE: {
+//                Glide.with(mContext).resumeRequests();
+//                break;
+//            }
+//            case SCROLL_STATE_DRAGGING: {
+//                Glide.with(mContext).pauseRequests();
+//                break;
+//            }
+//        }
+//    }
 
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {

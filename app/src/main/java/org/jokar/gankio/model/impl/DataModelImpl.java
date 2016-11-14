@@ -10,6 +10,7 @@ import org.jokar.gankio.di.component.network.DaggerDataComponent;
 import org.jokar.gankio.di.module.network.DataModule;
 import org.jokar.gankio.model.entities.DataEntities;
 import org.jokar.gankio.model.event.DataModel;
+import org.jokar.gankio.model.network.exception.CustomizeException;
 import org.jokar.gankio.model.network.exception.DataException;
 import org.jokar.gankio.model.network.result.HttpResultFunc;
 import org.jokar.gankio.model.network.services.DataService;
@@ -115,7 +116,7 @@ public class DataModelImpl implements DataModel {
                     @Override
                     public List<DataEntities> call(List<DataEntities> entitiesList) {
                         if (entitiesList == null || entitiesList.size() == 0) {
-                            throw new IllegalAccessError("无数据");
+                            throw new CustomizeException("无数据");
                         }
                         return entitiesList;
                     }

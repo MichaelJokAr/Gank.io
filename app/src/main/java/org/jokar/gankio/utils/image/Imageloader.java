@@ -47,7 +47,7 @@ public class Imageloader {
 
     public static void clearCache(Context context) {
         JLog.e("Clear Image Cache");
-        Glide.get(context).clearMemory();
-        new Thread(() -> Glide.get(context).clearDiskCache()).start();
+//        Glide.get(context).clearMemory();
+//        new Thread(() -> Glide.get(context).clearDiskCache()).start();
     }
 }

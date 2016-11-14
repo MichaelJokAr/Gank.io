@@ -114,7 +114,7 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_light
                 , android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light);
 
-        mOnScrollListener = new RecyclerOnScrollListener(recyclerView) {
+        mOnScrollListener = new RecyclerOnScrollListener(recyclerView,getContext()) {
             @Override
             public void onLoadMore(int currentPage) {
                 Imageloader.clearCache(getContext());

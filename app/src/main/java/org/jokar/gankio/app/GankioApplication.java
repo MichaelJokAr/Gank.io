@@ -25,13 +25,21 @@ public class GankioApplication extends Application {
     public void onCreate() {
         super.onCreate();
         //初始化bugly
-        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
-        strategy.setAppVersion(String.valueOf(getVersionCode(getApplicationContext())));
-        CrashReport.initCrashReport(getApplicationContext(), "eba929c175", BuildConfig.DEBUG, strategy);
+        initBugly();
         mNetComponent = DaggerNetComponent.builder()
                 .netModule(new NetModule())
                 .build();
     }
+
+    /**
+     * 初始化bugly
+     */
+    private void initBugly() {
+        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
+        strategy.setAppVersion(String.valueOf(getVersionCode(getApplicationContext())));
+        CrashReport.initCrashReport(getApplicationContext(), "eba929c175", BuildConfig.DEBUG, strategy);
+    }
+
 
     public static NetComponent getNetComponent() {
         return mNetComponent;
@@ -49,7 +57,6 @@ public class GankioApplication extends Application {
                     context.getPackageName(), 0);
             return pi.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return 0;
         }
