@@ -22,15 +22,15 @@ import org.jokar.gankio.model.entities.DataEntities;
 import org.jokar.gankio.utils.JToast;
 import org.jokar.gankio.utils.NavigationbarUtil;
 import org.jokar.gankio.view.listener.DownloadIntentService;
-import org.jokar.permissiondispatcher.annotation.NeedsPermission;
-import org.jokar.permissiondispatcher.annotation.OnNeverAskAgain;
-import org.jokar.permissiondispatcher.annotation.OnPermissionDenied;
-import org.jokar.permissiondispatcher.annotation.OnShowRationale;
-import org.jokar.permissiondispatcher.annotation.RuntimePermissions;
-import org.jokar.permissiondispatcher.library.PermissionRequest;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
 /**
  * 福利图片
