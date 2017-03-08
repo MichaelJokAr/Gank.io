@@ -2,7 +2,8 @@ package org.jokar.gankio.model.event;
 
 import android.support.annotation.NonNull;
 
-import com.trello.rxlifecycle.LifecycleTransformer;
+
+import com.trello.rxlifecycle2.LifecycleTransformer;
 
 import org.jokar.gankio.db.SearchDB;
 import org.jokar.gankio.model.entities.SearchEntities;

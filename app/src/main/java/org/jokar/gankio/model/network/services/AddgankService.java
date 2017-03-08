@@ -2,10 +2,10 @@ package org.jokar.gankio.model.network.services;
 
 import org.jokar.gankio.model.entities.AddGank;
 
+import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
-import rx.Observable;
 
 /**
  * Created by JokAr on 2016/9/23.

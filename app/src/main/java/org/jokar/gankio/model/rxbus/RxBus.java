@@ -1,22 +1,23 @@
 package org.jokar.gankio.model.rxbus;
 
-import com.trello.rxlifecycle.LifecycleTransformer;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.subjects.PublishSubject;
-import rx.subjects.SerializedSubject;
-import rx.subjects.Subject;
+import com.trello.rxlifecycle2.LifecycleTransformer;
+
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.processors.FlowableProcessor;
+import io.reactivex.processors.PublishProcessor;
+
 
 /**
  * Created by JokAr on 16/8/2.
  */
 public class RxBus {
-    private final Subject<Object, Object> _bus;
+    private final FlowableProcessor<Object> _bus;
     private volatile static RxBus instace;
 
     public RxBus() {
-        _bus = new SerializedSubject<>(PublishSubject.create());
+        _bus =PublishProcessor.create().toSerialized();
     }
 
     public static RxBus getBus() {
@@ -39,8 +40,8 @@ public class RxBus {
      * @param lifecycleTransformer rxlifecycle
      * @return
      */
-    public Observable<Object> toObserverable(LifecycleTransformer lifecycleTransformer){
-        return _bus.compose(lifecycleTransformer);
+    public Flowable toObservable(LifecycleTransformer lifecycleTransformer){
+        return _bus.compose(lifecycleTransformer).onBackpressureDrop();
     }
 
     /**
@@ -49,7 +50,7 @@ public class RxBus {
      * @param lifecycleTransformer rxlifecycle
      * @return
      */
-    public Observable<Object> toMainThreadObserverable(LifecycleTransformer lifecycleTransformer){
-        return _bus.observeOn(AndroidSchedulers.mainThread()).compose(lifecycleTransformer);
+    public Flowable toMainThreadObservable(LifecycleTransformer lifecycleTransformer){
+        return _bus.observeOn(AndroidSchedulers.mainThread()).compose(lifecycleTransformer).onBackpressureDrop();
     }
 }

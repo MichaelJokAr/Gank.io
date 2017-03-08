@@ -2,7 +2,8 @@ package org.jokar.gankio.model.impl;
 
 import android.support.annotation.NonNull;
 
-import com.trello.rxlifecycle.LifecycleTransformer;
+
+import com.trello.rxlifecycle2.LifecycleTransformer;
 
 import org.jokar.gankio.app.GankioApplication;
 import org.jokar.gankio.db.DataDB;
@@ -15,16 +16,18 @@ import org.jokar.gankio.model.network.exception.DataException;
 import org.jokar.gankio.model.network.result.HttpResultFunc;
 import org.jokar.gankio.model.network.services.DataService;
 import org.jokar.gankio.utils.JLog;
-import org.jokar.gankio.utils.Schedulers;
+import org.jokar.gankio.utils.SchedulersUtil;
+import org.reactivestreams.Subscriber;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.ResourceObserver;
 import retrofit2.Retrofit;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 
 import static org.jokar.gankio.utils.Preconditions.checkNotNull;
 
@@ -64,23 +67,33 @@ public class DataModelImpl implements DataModel {
         callBack.start(hasLocalData, loaclEntities);
         mDataService.getData(type, count, pageSize)
                 .compose(lifecycleTransformer)
-                .compose(Schedulers.applySchedulersIO())
+                .compose(SchedulersUtil.applySchedulersIO())
                 .map(new HttpResultFunc())
-                .map(new Func1<List<DataEntities>, List<DataEntities>>() {
+                .map(new Function<ArrayList<DataEntities>, ArrayList<DataEntities>>() {
 
+                    /**
+                     * Apply some calculation to the input value and return some other value.
+                     *
+                     * @param dataEntities the input value
+                     * @return the output value
+                     * @throws Exception on error
+                     */
                     @Override
-                    public List<DataEntities> call(List<DataEntities> entitiesList) {
-                        if (entitiesList == null || entitiesList.size() == 0) {
+                    public ArrayList<DataEntities> apply(@NonNull ArrayList<DataEntities> dataEntities) throws Exception {
+                        if (dataEntities == null || dataEntities.size() == 0) {
                             throw new DataException("无数据");
                         }
-                        return entitiesList;
+                        return dataEntities;
                     }
+
+
+
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<DataEntities>>() {
+                .subscribe(new ResourceObserver<ArrayList<DataEntities>>() {
 
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         callBack.onCompleted();
                     }
 
@@ -91,7 +104,7 @@ public class DataModelImpl implements DataModel {
                     }
 
                     @Override
-                    public void onNext(List<DataEntities> dataEntitiesList) {
+                    public void onNext(ArrayList<DataEntities> dataEntitiesList) {
                         dataDB.insert(dataEntitiesList);
                         callBack.requestSuccess(dataEntitiesList);
                     }
@@ -109,23 +122,24 @@ public class DataModelImpl implements DataModel {
 
         mDataService.getData(type, count, pageSize)
                 .compose(lifecycleTransformer)
-                .compose(Schedulers.applySchedulersIO())
+                .compose(SchedulersUtil.applySchedulersIO())
                 .map(new HttpResultFunc())
-                .map(new Func1<List<DataEntities>, List<DataEntities>>() {
+                .map(new Function<ArrayList<DataEntities>, ArrayList<DataEntities>>() {
 
                     @Override
-                    public List<DataEntities> call(List<DataEntities> entitiesList) {
+                    public ArrayList<DataEntities> apply(@NonNull ArrayList<DataEntities> entitiesList) throws Exception {
                         if (entitiesList == null || entitiesList.size() == 0) {
-                            throw new CustomizeException("无数据");
+                            throw new DataException("无数据");
                         }
                         return entitiesList;
                     }
+
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<DataEntities>>() {
+                .subscribe(new ResourceObserver<ArrayList<DataEntities>>() {
 
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         callBack.onCompleted();
                     }
 
@@ -136,7 +150,7 @@ public class DataModelImpl implements DataModel {
                     }
 
                     @Override
-                    public void onNext(List<DataEntities> dataEntitiesList) {
+                    public void onNext(ArrayList<DataEntities> dataEntitiesList) {
                         dataDB.insert(dataEntitiesList);
                         callBack.requestSuccess(dataEntitiesList);
                     }

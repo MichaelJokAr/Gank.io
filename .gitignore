@@ -5,3 +5,7 @@
 .DS_Store
 /build
 /captures
+app/bugly
+*.gitignore
+app/src/test/java/org/jokar/gankio/model/
+

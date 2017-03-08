@@ -8,12 +8,16 @@ import android.database.sqlite.SQLiteDatabase;
 import org.jokar.gankio.model.entities.DataEntities;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.schedulers.Schedulers;
+import io.reactivex.Flowable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by JokAr on 16/9/19.
@@ -40,10 +44,13 @@ public class DataDB {
 
 
     public void insert(List<DataEntities> dataEntitiesList) {
-
-        Observable.from(dataEntitiesList)
+        DataEntities[] array = new DataEntities[dataEntitiesList.size()];
+        dataEntitiesList.toArray(array);
+        Flowable.fromArray(array)
                 .observeOn(Schedulers.computation())
-                .subscribe(this::insert);
+                .onBackpressureDrop()
+                .subscribe(dataEntities -> insert(dataEntities));
+
     }
 
     public void insert(DataEntities entitie) {

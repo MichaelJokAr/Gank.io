@@ -13,7 +13,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Observable;
+import io.reactivex.Flowable;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by JokAr on 2016/9/24.
@@ -76,9 +78,10 @@ public class DailyGankDB {
     }
 
     public void insert(List<DataEntities> dataEntities, String day) {
-
-        Observable.from(dataEntities)
-                .observeOn(rx.schedulers.Schedulers.computation())
+        DataEntities[] objects = new DataEntities[dataEntities.size()];
+        dataEntities.toArray(objects);
+        Flowable.fromArray(objects)
+                .observeOn(Schedulers.computation())
                 .subscribe(dataEntitie -> insert(dataEntitie, day));
 
     }

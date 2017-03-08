@@ -1,6 +1,7 @@
 package org.jokar.gankio.presenter.impl;
 
-import com.trello.rxlifecycle.LifecycleTransformer;
+
+import com.trello.rxlifecycle2.LifecycleTransformer;
 
 import org.jokar.gankio.db.DataDB;
 import org.jokar.gankio.model.entities.DataEntities;
@@ -8,6 +9,7 @@ import org.jokar.gankio.model.event.DataModel;
 import org.jokar.gankio.presenter.event.DataPresenter;
 import org.jokar.gankio.view.ui.FragmentView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -38,14 +40,14 @@ public class DataPresenterImpl implements DataPresenter {
                     public void start(boolean hasLocalData, List<DataEntities> dataEntitiesList) {
                         mFragmentView.showLoadProgress();
                         if (hasLocalData) {
-                            mFragmentView.loadStartLocalData(dataEntitiesList);
+                            mFragmentView.loadStartLocalData(new ArrayList<>(dataEntitiesList));
                         } else {
                             mFragmentView.loadStartNoLocalData();
                         }
                     }
 
                     @Override
-                    public void requestSuccess(List<DataEntities> dataEntitiesList) {
+                    public void requestSuccess(ArrayList<DataEntities> dataEntitiesList) {
                         mFragmentView.loadData(dataEntitiesList);
 
                     }
@@ -77,7 +79,7 @@ public class DataPresenterImpl implements DataPresenter {
                     }
 
                     @Override
-                    public void requestSuccess(List<DataEntities> dataEntitiesList) {
+                    public void requestSuccess(ArrayList<DataEntities> dataEntitiesList) {
 
                         mFragmentView.loadData(dataEntitiesList);
 
@@ -107,7 +109,7 @@ public class DataPresenterImpl implements DataPresenter {
                     }
 
                     @Override
-                    public void requestSuccess(List<DataEntities> dataEntitiesList) {
+                    public void requestSuccess(ArrayList<DataEntities> dataEntitiesList) {
                         mFragmentView.loadMore(dataEntitiesList);
                     }
 

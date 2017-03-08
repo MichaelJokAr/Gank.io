@@ -1,6 +1,7 @@
 package org.jokar.gankio.model.impl;
 
-import com.trello.rxlifecycle.LifecycleTransformer;
+
+import com.trello.rxlifecycle2.LifecycleTransformer;
 
 import org.jokar.gankio.app.GankioApplication;
 import org.jokar.gankio.di.component.network.DaggerAddgankComponent;
@@ -9,13 +10,14 @@ import org.jokar.gankio.model.event.AddGankModel;
 import org.jokar.gankio.model.network.result.HttpResultCodeFunc;
 import org.jokar.gankio.model.network.services.AddgankService;
 import org.jokar.gankio.utils.JLog;
-import org.jokar.gankio.utils.Schedulers;
+
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.ResourceObserver;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 
 import static org.jokar.gankio.utils.Preconditions.checkNotNull;
 
@@ -49,10 +51,11 @@ public class AddGankModelImpl implements AddGankModel {
 
         mAddgankService.addGank(url, desc, who, type, debug)
                 .compose(lifecycleTransformer)
-                .compose(Schedulers.applySchedulersIO())
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
                 .map(new HttpResultCodeFunc())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<String>() {
+                .subscribe(new ResourceObserver<String>() {
                     @Override
                     public void onStart() {
                         super.onStart();
@@ -60,9 +63,10 @@ public class AddGankModelImpl implements AddGankModel {
                     }
 
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         callBack.compelete();
                     }
+
 
                     @Override
                     public void onError(Throwable e) {
@@ -70,10 +74,13 @@ public class AddGankModelImpl implements AddGankModel {
                         callBack.fail(e);
                     }
 
+
+
                     @Override
                     public void onNext(String message) {
                         callBack.success(message);
                     }
                 });
+
     }
 }

@@ -12,8 +12,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.functions.Action1;
+import io.reactivex.Flowable;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by JokAr on 16/9/18.
@@ -37,8 +38,11 @@ public class SearchDB {
     }
 
     public void insert(List<SearchEntities> searchEntities) {
-
-        Observable.from(searchEntities)
+        SearchEntities[] objects = new SearchEntities[searchEntities.size()];
+        searchEntities.toArray(objects);
+       Flowable.fromArray(objects)
+               . observeOn(Schedulers.computation())
+                .onBackpressureDrop()
                 .subscribe(this::insert);
 
     }

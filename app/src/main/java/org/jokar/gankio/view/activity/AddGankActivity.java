@@ -16,8 +16,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
-import com.jakewharton.rxbinding.widget.RxTextView;
-import com.trello.rxlifecycle.android.ActivityEvent;
+
+import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 
 import org.jokar.gankio.BuildConfig;
 import org.jokar.gankio.R;
@@ -90,11 +91,13 @@ public class AddGankActivity extends BaseActivity implements AddGankView {
             layoutDesc.setErrorEnabled(false);
             layoutDesc.setHintEnabled(true);
         });
+
         RxTextView.textChanges(edUrl).compose(bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(charSequence -> {
             layoutUrl.setErrorEnabled(false);
             layoutUrl.setHintEnabled(true);
         });
+
         RxTextView.textChanges(edWho).compose(bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(charSequence -> {
             layoutWho.setErrorEnabled(false);

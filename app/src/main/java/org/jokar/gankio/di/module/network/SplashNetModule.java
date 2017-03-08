@@ -1,5 +1,7 @@
 package org.jokar.gankio.di.module.network;
 
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+
 import org.jokar.gankio.BuildConfig;
 
 import java.util.concurrent.TimeUnit;
@@ -11,7 +13,6 @@ import dagger.Provides;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -39,7 +40,7 @@ public class SplashNetModule {
                 .baseUrl("http://news-at.zhihu.com/api/4/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
     }
 }

@@ -11,7 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.trello.rxlifecycle.android.ActivityEvent;
+
+import com.trello.rxlifecycle2.android.ActivityEvent;
 
 import org.jokar.gankio.R;
 import org.jokar.gankio.db.DailyGankDB;

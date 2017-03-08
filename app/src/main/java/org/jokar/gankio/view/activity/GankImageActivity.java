@@ -15,13 +15,17 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding2.view.RxMenuItem;
+import com.jakewharton.rxbinding2.view.RxView;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 
 import org.jokar.gankio.R;
 import org.jokar.gankio.model.entities.DataEntities;
 import org.jokar.gankio.utils.JToast;
 import org.jokar.gankio.utils.NavigationbarUtil;
 import org.jokar.gankio.view.listener.DownloadIntentService;
+
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,15 +64,14 @@ public class GankImageActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.gankimage_menu, menu);
+        //点击事件
+        RxMenuItem.clicks(menu.getItem(0))
+                .compose(bindUntilEvent(ActivityEvent.DESTROY))
+                .throttleFirst(1, TimeUnit.SECONDS)
+                .subscribe(o -> {
+                    GankImageActivityPermissionsDispatcher.downloadWithCheck(this);
+                });
         return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.download) {
-            GankImageActivityPermissionsDispatcher.downloadWithCheck(this);
-        }
-        return super.onOptionsItemSelected(item);
     }
 
 

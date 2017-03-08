@@ -9,7 +9,7 @@ import org.jokar.gankio.model.event.DownloadModel;
 import org.jokar.gankio.model.network.down.DownloadProgressListener;
 import org.jokar.gankio.model.network.services.DownloadService;
 import org.jokar.gankio.utils.FileUtils;
-import org.jokar.gankio.utils.Schedulers;
+import org.jokar.gankio.utils.SchedulersUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,9 +17,10 @@ import java.io.InputStream;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.ResourceObserver;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 
 import static org.jokar.gankio.utils.Preconditions.checkNotNull;
 /**
@@ -52,9 +53,9 @@ public class DownloadModelImpl implements DownloadModel {
         checkNotNull(callBack);
 
         mDownloadService.download(url)
-                .compose(Schedulers.applySchedulersIO())
+                .compose(SchedulersUtil.applySchedulersIO())
                 .map(responseBody ->  responseBody.byteStream())
-                .observeOn(rx.schedulers.Schedulers.computation())
+                .observeOn(Schedulers.computation())
                 .doOnNext(inputStream -> {
 
                     try {
@@ -65,9 +66,9 @@ public class DownloadModelImpl implements DownloadModel {
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<InputStream>() {
+                .subscribe(new ResourceObserver<InputStream>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         callBack.downloadSuccess();
                     }
 

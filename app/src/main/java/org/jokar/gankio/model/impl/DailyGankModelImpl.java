@@ -1,6 +1,7 @@
 package org.jokar.gankio.model.impl;
 
-import com.trello.rxlifecycle.LifecycleTransformer;
+
+import com.trello.rxlifecycle2.LifecycleTransformer;
 
 import org.jokar.gankio.app.GankioApplication;
 import org.jokar.gankio.db.DailyGankDB;
@@ -12,15 +13,18 @@ import org.jokar.gankio.model.network.exception.DataException;
 import org.jokar.gankio.model.network.result.HttpResultFunc;
 import org.jokar.gankio.model.network.services.DailyGankService;
 import org.jokar.gankio.utils.JLog;
-import org.jokar.gankio.utils.Schedulers;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.ResourceObserver;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 
 
 import static org.jokar.gankio.utils.Preconditions.checkNotNull;
@@ -57,10 +61,9 @@ public class DailyGankModelImpl implements DailyGankModel {
 
         callback.start();
         String Day = year + "-" + month + "-" + day;
-
-        Observable.create(new Observable.OnSubscribe<Boolean>() {
+        Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
-            public void call(Subscriber<? super Boolean> subscriber) {
+            public void subscribe(ObservableEmitter<Boolean> subscriber) throws Exception {
                 boolean hasDailyGank = dailyGankDB.hasDailyGank(Day);
                 subscriber.onNext(hasDailyGank);
             }
@@ -79,11 +82,13 @@ public class DailyGankModelImpl implements DailyGankModel {
                     //请求网络数据
                     mDailyGankService.day(year, month, day)
                             .compose(lifecycleTransformer)
-                            .compose(Schedulers.applySchedulersIO())
+                            .subscribeOn(Schedulers.io())
+                            .unsubscribeOn(Schedulers.io())
                             .map(new HttpResultFunc<GankDayEntities>())
-                            .map(new Func1<GankDayEntities, GankDayEntities>() {
+                            .map(new Function<GankDayEntities, GankDayEntities>() {
                                 @Override
-                                public GankDayEntities call(GankDayEntities gankDayEntities) {
+                                public GankDayEntities apply(@NonNull GankDayEntities gankDayEntities)
+                                        throws Exception {
                                     if (gankDayEntities.isNull()) {
                                         throw new DataException("今日暂无干货!");
                                     }
@@ -92,16 +97,17 @@ public class DailyGankModelImpl implements DailyGankModel {
 
                             })
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Subscriber<GankDayEntities>() {
-                                @Override
-                                public void onCompleted() {
-                                    callback.compelete();
-                                }
+                            .subscribe(new ResourceObserver<GankDayEntities>() {
 
                                 @Override
                                 public void onError(Throwable e) {
                                     JLog.e(e);
                                     callback.requestFail(e);
+                                }
+
+                                @Override
+                                public void onComplete() {
+                                    callback.compelete();
                                 }
 
                                 @Override
@@ -113,5 +119,7 @@ public class DailyGankModelImpl implements DailyGankModel {
                             });
 
                 });
+
+
     }
 }

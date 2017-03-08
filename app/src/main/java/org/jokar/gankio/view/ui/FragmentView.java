@@ -2,6 +2,7 @@ package org.jokar.gankio.view.ui;
 
 import org.jokar.gankio.model.entities.DataEntities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ public interface FragmentView {
 
     void completeLoadProgress();
 
-    void loadStartLocalData(List<DataEntities> searchEntities);
+    void loadStartLocalData(ArrayList<DataEntities> searchEntities);
 
     void loadStartNoLocalData();
 
@@ -21,11 +22,11 @@ public interface FragmentView {
 
     void loadNoData(Throwable e);
 
-    void loadData(List<DataEntities> dataEntitiesList);
+    void loadData(ArrayList<DataEntities> dataEntitiesList);
 
     void refreshFail(Throwable e);
 
-    void loadMore(List<DataEntities> dataEntitiesList);
+    void loadMore(ArrayList<DataEntities> dataEntitiesList);
 
     void loadMoreFail(Throwable e);
 }

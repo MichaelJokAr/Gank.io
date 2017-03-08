@@ -3,7 +3,7 @@ package org.jokar.gankio.view.activity;
 import android.graphics.Color;
 import android.support.v7.widget.Toolbar;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 
 /**

@@ -15,7 +15,9 @@
 		android:fadingEdge="none"
 		android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
 		app:elevation="0dp">
-
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/statusbarHeight"/>
 		<android.support.v7.widget.Toolbar
 			android:id="@+id/toolbar"
 			android:layout_width="match_parent"

@@ -1,8 +1,7 @@
 package org.jokar.gankio.presenter.event;
 
-import android.content.Context;
 
-import com.trello.rxlifecycle.LifecycleTransformer;
+import com.trello.rxlifecycle2.LifecycleTransformer;
 
 import org.jokar.gankio.model.config.ConfigPreferences;
 

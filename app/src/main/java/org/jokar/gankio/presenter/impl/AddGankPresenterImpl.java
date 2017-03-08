@@ -2,16 +2,20 @@ package org.jokar.gankio.presenter.impl;
 
 import android.text.TextUtils;
 
-import com.trello.rxlifecycle.LifecycleTransformer;
+
+import com.trello.rxlifecycle2.LifecycleTransformer;
 
 import org.jokar.gankio.model.event.AddGankModel;
 import org.jokar.gankio.presenter.event.AddGankPresenter;
 import org.jokar.gankio.view.ui.AddGankView;
+import org.reactivestreams.Subscriber;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+
 
 /**
  * Created by JokAr on 2016/9/23.
@@ -32,11 +36,8 @@ public class AddGankPresenterImpl implements AddGankPresenter {
     public void submit(LifecycleTransformer lifecycleTransformer,
                        String url, String desc, String who, String type, boolean debug) {
 
-        Observable.create(new Observable.OnSubscribe<Boolean>() {
-            @Override
-            public void call(Subscriber<? super Boolean> subscriber) {
-                subscriber.onNext(debug);
-            }
+        Observable.create((ObservableOnSubscribe<Boolean>) subscriber ->{
+            subscriber.onNext(debug);
         })
                 .filter(aBoolean -> {
                     //检查类型

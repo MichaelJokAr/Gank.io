@@ -1,10 +1,12 @@
 package org.jokar.gankio.model.event;
 
-import com.trello.rxlifecycle.LifecycleTransformer;
+
+import com.trello.rxlifecycle2.LifecycleTransformer;
 
 import org.jokar.gankio.db.DataDB;
 import org.jokar.gankio.model.entities.DataEntities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +17,7 @@ public interface DataModel {
     interface DataCallBack{
         void start(boolean hasLocalData, List<DataEntities> dataEntitiesList);
 
-        void requestSuccess(List<DataEntities> dataEntitiesList);
+        void requestSuccess(ArrayList<DataEntities> dataEntitiesList);
 
         void requestFail(boolean hasLocalData, Throwable e);
 

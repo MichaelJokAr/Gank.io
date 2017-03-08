@@ -8,7 +8,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.jokar.gankio.utils.JLog;
 
-import rx.Observable;
 
 /**
  * Created by JokAr on 2016/11/1.

@@ -3,9 +3,9 @@ package org.jokar.gankio.model.network.services;
 import org.jokar.gankio.model.entities.GankDayEntities;
 import org.jokar.gankio.model.network.result.HttpResult;
 
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-import rx.Observable;
 
 /**
  * 每日干货api

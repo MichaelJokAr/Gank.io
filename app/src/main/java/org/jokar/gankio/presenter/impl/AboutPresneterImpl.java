@@ -2,10 +2,8 @@ package org.jokar.gankio.presenter.impl;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.preference.Preference;
 import android.support.v7.app.AlertDialog;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -13,11 +11,13 @@ import org.jokar.gankio.presenter.event.AboutPresenter;
 
 import java.io.File;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by JokAr on 2016/9/26.
@@ -29,7 +29,7 @@ public class AboutPresneterImpl implements AboutPresenter {
     @Override
     public void showCache(Context context, File file, Preference tv_cache) {
 
-        Observable.just(file)
+        Flowable.just(file)
                 .subscribeOn(Schedulers.computation())
                 .unsubscribeOn(Schedulers.computation())
                 .map(file1 -> {return calculateSize(file);})
@@ -60,13 +60,8 @@ public class AboutPresneterImpl implements AboutPresenter {
      */
     private void clearImageCache(File file, final Activity activity, final Preference tv_cache) {
 
-        Observable.just(file)
-                .doOnNext(new Action1<File>() {
-                    @Override
-                    public void call(File file) {
-                        Glide.get(activity).clearDiskCache();
-                    }
-                })
+        Flowable.just(file)
+                .doOnNext(file12 -> Glide.get(activity).clearDiskCache())
                 .map(file1 -> {
                     return calculateSize(file1);
                 })

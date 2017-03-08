@@ -24,61 +24,50 @@ public abstract class RecyclerOnScrollListener extends RecyclerView.OnScrollList
     int lastCompletelyVisiableItemPosition, visibleItemCount, totalItemCount;
 
     private int currentPage = 1;
+    private boolean shouldLoading = true;
 
     private RecyclerViewPositionHelper mHelper;
-    private Context mContext;
 
-    public RecyclerOnScrollListener(RecyclerView recyclerView, Context context) {
+    public RecyclerOnScrollListener(RecyclerView recyclerView) {
 
         mHelper = new RecyclerViewPositionHelper(recyclerView);
-        mContext = context;
     }
-
-//    @Override
-//    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//        super.onScrollStateChanged(recyclerView, newState);
-//        switch (newState) {
-//            case SCROLL_STATE_SETTLING:
-//            case SCROLL_STATE_IDLE: {
-//                Glide.with(mContext).resumeRequests();
-//                break;
-//            }
-//            case SCROLL_STATE_DRAGGING: {
-//                Glide.with(mContext).pauseRequests();
-//                break;
-//            }
-//        }
-//    }
 
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 
         super.onScrolled(recyclerView, dx, dy);
+        if (shouldLoading) {
+            visibleItemCount = recyclerView.getChildCount();
+            totalItemCount = mHelper.getItemCount();
+            lastCompletelyVisiableItemPosition = mHelper.findLastCompletelyVisibleItemPosition();
 
-        visibleItemCount = recyclerView.getChildCount();
-        totalItemCount = mHelper.getItemCount();
-        lastCompletelyVisiableItemPosition = mHelper.findLastCompletelyVisibleItemPosition();
-
-        if (loading) {
-            if (totalItemCount > previousTotal) {
-                loading = false;
-                previousTotal = totalItemCount;
+            if (loading) {
+                if (totalItemCount > previousTotal) {
+                    loading = false;
+                    previousTotal = totalItemCount;
+                }
+            }
+            if (!loading
+                    && (visibleItemCount > 0)
+                    && (lastCompletelyVisiableItemPosition >= totalItemCount - 1)) {
+                currentPage++;
+                onLoadMore(currentPage);
+                loading = true;
             }
         }
-        if (!loading
-                && (visibleItemCount > 0)
-                && (lastCompletelyVisiableItemPosition >= totalItemCount - 1)) {
-            currentPage++;
-            onLoadMore(currentPage);
-            loading = true;
-        }
     }
 
-    public abstract void onLoadMore(int currentPage);
-
-    public void setLoading(boolean loading) {
-        this.loading = loading;
-        if (loading)
+    public void setCanLoading(boolean loading) {
+        shouldLoading = loading;
+        if (true == shouldLoading)
             previousTotal = mHelper.getItemCount();
     }
+
+    public void setLoading(boolean loading){
+        this.loading = loading;
+        if (true == loading)
+            previousTotal = mHelper.getItemCount();
+    }
+    public abstract void onLoadMore(int currentPage);
 }

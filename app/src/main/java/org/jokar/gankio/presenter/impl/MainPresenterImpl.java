@@ -1,6 +1,7 @@
 package org.jokar.gankio.presenter.impl;
 
-import com.trello.rxlifecycle.LifecycleTransformer;
+
+import com.trello.rxlifecycle2.LifecycleTransformer;
 
 import org.jokar.gankio.db.DailyGankDB;
 import org.jokar.gankio.model.entities.GankDayEntities;
@@ -13,8 +14,10 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+
 
 /**
  * Created by JokAr on 2016/9/25.
@@ -39,11 +42,8 @@ public class MainPresenterImpl implements DailyGankPresenter {
 
         String day = formatter.format(new Date(time));
         String[] times = day.split("-");
-        Observable.create(new Observable.OnSubscribe<Boolean>() {
-            @Override
-            public void call(Subscriber<? super Boolean> subscriber) {
-                subscriber.onNext(true);
-            }
+        Observable.create((ObservableOnSubscribe<Boolean>) subscriber ->{
+            subscriber.onNext(true);
         })
                 .filter(aBoolean -> {
                     if (dailyGankDB.hasDailyGank(day)) {

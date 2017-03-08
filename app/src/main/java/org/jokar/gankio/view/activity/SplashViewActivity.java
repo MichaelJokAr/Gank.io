@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.trello.rxlifecycle.android.ActivityEvent;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 
 import org.jokar.gankio.R;
 import org.jokar.gankio.di.component.config.DaggerCPComponent;

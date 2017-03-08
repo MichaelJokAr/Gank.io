@@ -3,11 +3,11 @@ package org.jokar.gankio.model.network.services;
 import org.jokar.gankio.model.entities.DataEntities;
 import org.jokar.gankio.model.network.result.HttpResult;
 
-import java.util.List;
+import java.util.ArrayList;
 
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-import rx.Observable;
 
 /**
  * Created by JokAr on 16/9/19.
@@ -22,7 +22,7 @@ public interface DataService {
      * @return
      */
     @GET("data/{type}/{count}/{pageSize}")
-    Observable<HttpResult<List<DataEntities>>> getData(@Path("type") String type,
-                                                       @Path("count") int count,
-                                                       @Path("pageSize") int pageSize);
+    Observable<HttpResult<ArrayList<DataEntities>>> getData(@Path("type") String type,
+                                                            @Path("count") int count,
+                                                            @Path("pageSize") int pageSize);
 }

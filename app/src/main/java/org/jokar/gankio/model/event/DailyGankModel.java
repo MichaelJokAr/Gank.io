@@ -1,6 +1,7 @@
 package org.jokar.gankio.model.event;
 
-import com.trello.rxlifecycle.LifecycleTransformer;
+
+import com.trello.rxlifecycle2.LifecycleTransformer;
 
 import org.jokar.gankio.db.DailyGankDB;
 import org.jokar.gankio.model.entities.GankDayEntities;

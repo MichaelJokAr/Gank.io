@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
-import com.trello.rxlifecycle.LifecycleTransformer;
+import com.trello.rxlifecycle2.LifecycleTransformer;
 
 import org.jokar.gankio.di.component.network.DaggerSplashComponent;
 import org.jokar.gankio.di.component.network.DaggerSplashNetComponent;
@@ -16,13 +16,13 @@ import org.jokar.gankio.model.config.ConfigPreferences;
 import org.jokar.gankio.model.entities.SplashImage;
 import org.jokar.gankio.model.event.SplashViewModel;
 import org.jokar.gankio.model.network.services.SplashService;
+import org.jokar.gankio.utils.SchedulersUtil;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.ResourceObserver;
 import retrofit2.Retrofit;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 
 import static org.jokar.gankio.utils.Preconditions.checkNotNull;
@@ -60,12 +60,11 @@ public class SplashViewModelImpl implements SplashViewModel {
 
         mSplashService.getImage()
                 .compose(lifecycleTransformer)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
+                .compose(SchedulersUtil.applySchedulersIO())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<SplashImage>() {
+                .subscribe(new ResourceObserver<SplashImage>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 

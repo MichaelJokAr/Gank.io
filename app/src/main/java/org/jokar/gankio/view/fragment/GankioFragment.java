@@ -15,8 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.trello.rxlifecycle.android.FragmentEvent;
+
+import com.trello.rxlifecycle2.android.FragmentEvent;
 
 import org.jokar.gankio.R;
 import org.jokar.gankio.db.DataDB;
@@ -27,6 +27,7 @@ import org.jokar.gankio.di.module.db.DataDBModule;
 import org.jokar.gankio.di.module.models.DataModelModule;
 import org.jokar.gankio.di.module.view.FragmentViewModule;
 import org.jokar.gankio.model.entities.DataEntities;
+import org.jokar.gankio.model.network.exception.DataException;
 import org.jokar.gankio.model.rxbus.RxBus;
 import org.jokar.gankio.model.rxbus.event.MainToolbarEvent;
 import org.jokar.gankio.presenter.impl.DataPresenterImpl;
@@ -36,11 +37,13 @@ import org.jokar.gankio.utils.image.Imageloader;
 import org.jokar.gankio.view.activity.GankActivity;
 import org.jokar.gankio.view.activity.GankImageActivity;
 import org.jokar.gankio.view.adapter.GankioFragmentAdapter;
+import org.jokar.gankio.view.adapter.base.LoadMoreAdapterItemClickListener;
 import org.jokar.gankio.view.ui.FragmentView;
 import org.jokar.gankio.widget.ErrorView;
 import org.jokar.gankio.widget.LazzyFragment;
 import org.jokar.gankio.widget.RecyclerOnScrollListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -74,10 +77,9 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
     private int pageSize = 1;
     private int count = 15;
 
-    private List<DataEntities> mDataEntitiesList;
+    private ArrayList<DataEntities> mDataEntitiesList;
 
     private boolean mIsVisibleToUser = false;
-    private RecyclerOnScrollListener mOnScrollListener;
 
     @Override
     public void setArguments(Bundle args) {
@@ -114,16 +116,7 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_light
                 , android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light);
 
-        mOnScrollListener = new RecyclerOnScrollListener(recyclerView,getContext()) {
-            @Override
-            public void onLoadMore(int currentPage) {
-                Imageloader.clearCache(getContext());
-                mAdapter.setFootClickable(false);
-                pageSize++;
-                mPresenter.loadMore(mDataDB, type, count, pageSize, bindUntilEvent(FragmentEvent.STOP));
-            }
-        };
-        recyclerView.addOnScrollListener(mOnScrollListener);
+
         swipeRefreshLayout.setOnRefreshListener(() -> {
             errorView.setRetryButtonClickable(false);
             mPresenter.refrsh(mDataDB, type, count, 1, bindUntilEvent(FragmentEvent.STOP));
@@ -135,7 +128,7 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
             mPresenter.refrsh(mDataDB, type, count, 1, bindUntilEvent(FragmentEvent.STOP));
         });
 
-        RxBus.getBus().toMainThreadObserverable(bindUntilEvent(FragmentEvent.STOP))
+        RxBus.getBus().toMainThreadObservable(bindUntilEvent(FragmentEvent.STOP))
                 .subscribe(event -> {
                     if (event instanceof MainToolbarEvent) {
                         if (recyclerView != null && mIsVisibleToUser) {
@@ -184,7 +177,7 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
     }
 
     @Override
-    public void loadStartLocalData(List<DataEntities> searchEntities) {
+    public void loadStartLocalData(ArrayList<DataEntities> searchEntities) {
         mDataEntitiesList = searchEntities;
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
                 new DataEntitieDiffCallback(mAdapter.getData(), mDataEntitiesList));
@@ -214,7 +207,7 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
     }
 
     @Override
-    public void loadData(List<DataEntities> searchEntities) {
+    public void loadData(ArrayList<DataEntities> searchEntities) {
         if (errorView.isShown()) {
             errorView.setVisibility(View.GONE);
             errorView.setRetryButtonClickable(true);
@@ -239,8 +232,7 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
     }
 
     @Override
-    public void loadMore(List<DataEntities> dataEntitiesList) {
-        mOnScrollListener.setLoading(false);
+    public void loadMore(ArrayList<DataEntities> dataEntitiesList) {
         mDataEntitiesList.addAll(dataEntitiesList);
 
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff
@@ -255,11 +247,15 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
 
     @Override
     public void loadMoreFail(Throwable e) {
-        JToast.Toast(getContext(), "加载失败: " + e.getMessage());
-        mOnScrollListener.setLoading(true);
-        pageSize--;
-        mAdapter.setFootClickable(true);
-        mAdapter.footShowClickText();
+        mAdapter.setCanLoading(true);
+        if (e.getClass() == DataException.class) {
+            mAdapter.showNoData();
+        } else {
+            JToast.Toast(getContext(),e.getMessage());
+            pageSize--;
+            mAdapter.setFootClickable(true);
+            mAdapter.footShowClickText();
+        }
     }
 
     public void setAdapterClick() {
@@ -272,14 +268,6 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
                 intent.putExtra("dataEntities", dataEntities);
                 startActivity(intent);
 
-            }
-
-            @Override
-            public void footViewClick() {
-                mAdapter.setFootClickable(false);
-                pageSize++;
-                mPresenter.loadMore(mDataDB, type, count, pageSize,
-                        bindUntilEvent(FragmentEvent.STOP));
             }
 
             @Override
@@ -299,6 +287,25 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
                 startActivity(intent, mActivityOptionsCompat.toBundle());
             }
         });
+
+        mAdapter.setOnItemClickListener(new LoadMoreAdapterItemClickListener() {
+            @Override
+            public void itemClickListener(int position) {
+
+            }
+
+            @Override
+            public void loadMore() {
+                pageSize++;
+                mPresenter.loadMore(mDataDB, type, count, pageSize, bindUntilEvent(FragmentEvent.STOP));
+            }
+
+            @Override
+            public void footViewClick() {
+                pageSize++;
+                mPresenter.loadMore(mDataDB, type, count, pageSize, bindUntilEvent(FragmentEvent.STOP));
+            }
+        });
     }
 
     @Override
@@ -311,9 +318,6 @@ public class GankioFragment extends LazzyFragment implements FragmentView {
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
-
-        if (mAdapter != null)
-            mAdapter.setOnItemClickListener(null);
 
     }
 

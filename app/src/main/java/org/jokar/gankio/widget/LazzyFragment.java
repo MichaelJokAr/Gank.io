@@ -2,14 +2,13 @@ package org.jokar.gankio.widget;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.trello.rxlifecycle.components.support.RxFragment;
 
-import org.jokar.gankio.utils.JLog;
+import com.trello.rxlifecycle2.components.support.RxFragment;
+
 
 /**
  * Created by JokAr on 16/9/9.

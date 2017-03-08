@@ -1,5 +1,7 @@
 package org.jokar.gankio.di.module.network;
 
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+
 import org.jokar.gankio.BuildConfig;
 import org.jokar.gankio.model.network.down.DownloadProgressInterceptor;
 import org.jokar.gankio.model.network.down.DownloadProgressListener;
@@ -11,9 +13,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -44,7 +44,7 @@ public class DownNetModule {
                 .baseUrl("http://gank.io/api/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
     }
 }

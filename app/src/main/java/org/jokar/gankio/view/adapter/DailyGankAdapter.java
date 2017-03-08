@@ -8,8 +8,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.jakewharton.rxbinding.view.RxView;
-import com.trello.rxlifecycle.LifecycleTransformer;
+//import com.jakewharton.rxbinding.view.RxView;
+//import com.trello.rxlifecycle.LifecycleTransformer;
+
+import com.jakewharton.rxbinding2.view.RxView;
+import com.trello.rxlifecycle2.LifecycleTransformer;
 
 import org.jokar.gankio.R;
 import org.jokar.gankio.model.entities.DataEntities;

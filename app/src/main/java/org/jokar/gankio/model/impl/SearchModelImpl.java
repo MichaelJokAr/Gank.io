@@ -2,7 +2,8 @@ package org.jokar.gankio.model.impl;
 
 import android.support.annotation.NonNull;
 
-import com.trello.rxlifecycle.LifecycleTransformer;
+
+import com.trello.rxlifecycle2.LifecycleTransformer;
 
 import org.jokar.gankio.app.GankioApplication;
 import org.jokar.gankio.db.SearchDB;
@@ -13,15 +14,15 @@ import org.jokar.gankio.model.event.SearchModel;
 import org.jokar.gankio.model.network.result.HttpResultFunc;
 import org.jokar.gankio.model.network.services.SearchService;
 import org.jokar.gankio.utils.JLog;
-import org.jokar.gankio.utils.Schedulers;
+import org.jokar.gankio.utils.SchedulersUtil;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.ResourceObserver;
 import retrofit2.Retrofit;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 
 import static org.jokar.gankio.utils.Preconditions.checkNotNull;
 
@@ -57,12 +58,12 @@ public class SearchModelImpl implements SearchModel {
 
         mSearchService.search(type, count, page)
                 .compose(lifecycleTransformer)
-                .compose(Schedulers.applySchedulersIO())
+                .compose(SchedulersUtil.applySchedulersIO())
                 .map(new HttpResultFunc())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<SearchEntities>>() {
+                .subscribe(new ResourceObserver<List<SearchEntities>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
