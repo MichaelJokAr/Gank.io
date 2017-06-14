@@ -14,7 +14,7 @@ a client for <a href="http://gank.io/">gank.io</a> with use dagger2+MVP+Rxjava</
 - MVP
 - dagger2
 - rxjava,rxAndroid,rxlife,rxbinding,rxbus
-- retrofit,okhhtp
+- retrofit,okhttp
 - glide
 - gson
 - butterknife
